@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <header>
-      <span class="logo">{{ title }}</span>
+      <span class="logo"><router-link to="/">{{ title }}</router-link></span>
       <ul>
         <li><router-link to="/">Images</router-link></li>
         <li><a href="https://github.com/vanilla-os">GitHub</a></li>

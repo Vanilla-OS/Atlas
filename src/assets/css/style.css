@@ -75,7 +75,11 @@ header ul li a {
     padding: 20px;
 }
 
-header ul li a:hover {
+header a {
+    text-decoration: none;
+}
+
+header a:hover {
     text-decoration: underline;
 }
 
