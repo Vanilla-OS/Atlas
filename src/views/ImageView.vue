@@ -117,7 +117,7 @@
         route.params.image as string, 
         route.params.tag as string
       )
-      this.pullCmd = `${AtlasConfig.registry}/${this.image.name}:${this.image.tag}`
+      this.pullCmd = `${AtlasConfig.registry}/${this.image.name}:${this.image.tag}`.replace("https://", "")
       document.title = `${this.image.name}:${this.image.tag} - ${AtlasConfig.title}`
     },
   })
