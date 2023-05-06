@@ -31,6 +31,7 @@ class RegistryManager {
       const config = await this.get_config(image, manifest.config.digest);
       const ociImage = new OciImage();
       const totalSize = manifest.layers.reduce((a: number, b: any) => a + b.size, 0);
+      
       ociImage.name = image;
       ociImage.size = totalSize;
       ociImage.create_date = new Date(config.history[0].created);
@@ -40,9 +41,12 @@ class RegistryManager {
       ociImage.os = config.os;
       ociImage.config = config.config;
       ociImage.history = config.history;
+      ociImage.layers = manifest.layers;
 
       return ociImage;
     }
+    
+    
   
     async get_images() {
       const images: OciImage[] = [];

@@ -1,7 +1,6 @@
 <template>
   <div v-if="image">
     <h1>{{ image.name }}:{{ image.tag }}</h1>
-
     <div class="panels">
       <div class="panel">
         <h2><span class="material-icons">devices</span> Architecture</h2>
@@ -14,6 +13,10 @@
       <div class="panel">
         <h2><span class="material-icons">date_range</span> Date</h2>
         <p>{{ image.pretty_create_date }}</p>
+      </div>
+      <div class="panel">
+        <h2><span class="material-icons">layers</span> Layers</h2>
+        <p>{{ image.layers.length }}</p>
       </div>
       <div class="panel">
         <h2><span class="material-icons">storage</span> Size</h2>

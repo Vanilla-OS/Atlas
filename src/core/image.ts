@@ -8,6 +8,7 @@ class OciImage {
     os!: string;
     config: any;
     history: any;
+    layers: any;
   
     get size_mb() {
       return parseFloat((this.size / 1024 / 1024).toFixed(2));
