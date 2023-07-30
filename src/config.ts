@@ -1,5 +1,5 @@
 class AtlasConfig {
-  public static readonly registry = 'https://registry.vanillaos.org';
+  public static readonly registry = 'ghcr.io/vanilla-os';
   public static readonly title = 'Vanilla OS Registry';
 }
 
