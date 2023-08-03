@@ -12,6 +12,9 @@
                 <li :class="{ 'is-active': curTab === 'details' }">
                     <a @click="curTab = 'details'">Details</a>
                 </li>
+                <li :class="{ 'is-active': curTab === 'snippet' }">
+                    <a @click="curTab = 'snippet'">Code</a>
+                </li>
                 <li :class="{ 'is-active': curTab === 'modules' }">
                     <a @click="curTab = 'modules'">Modules</a>
                 </li>
@@ -22,6 +25,8 @@
         </div>
 
         <RecipeDetails v-if="curTab === 'details'" :recipe="recipe" />
+
+        <RecipeSnippet v-else-if="curTab === 'snippet'" :recipe="recipe" />
 
         <RecipeModules v-if="curTab === 'modules' && !moduleDetails" :recipe="recipe" @showModuleDetails="showModuleDetails"
             @closeModuleDetails="moduleDetails = null" />
@@ -43,6 +48,7 @@ import type { VibRecipe } from "@/core/models";
 import AtlasManager from "@/core/manager";
 
 import RecipeDetails from "@/components/RecipeDetails.vue";
+import RecipeSnippet from "@/components/RecipeSnippet.vue";
 import RecipeModules from "@/components/RecipeModules.vue";
 import RecipeRuns from "@/components/RecipeRuns.vue";
 
@@ -50,6 +56,7 @@ export default defineComponent({
     name: "RecipeView",
     components: {
         RecipeDetails,
+        RecipeSnippet,
         RecipeModules,
         RecipeRuns,
     },

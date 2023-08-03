@@ -68,6 +68,7 @@ class AtlasManager {
         try {
           console.log(`Parsing recipe.yml from ${repo}`);
           const recipeObject = yaml.load(recipeYaml) as VibRecipe;
+          recipeObject.snippet = recipeYaml;
           const modules: Module[] = [];
 
           if (recipeObject.modules) {

@@ -25,6 +25,7 @@ table.is-bordered tr:last-child td,
 pre.block {
     padding: 20px;
     margin: 0 0 10px 0;
+    line-height: 1.3;
 }
 
 .bar-chart {
@@ -33,6 +34,7 @@ pre.block {
     height: 300px;
     margin-top: 10px;
     width: 100%;
+    overflow: hidden;
 }
 
 .bar-segment:hover {
@@ -50,4 +52,60 @@ pre.block {
     transition: height 0.2s;
     padding: 8px 10px;
     flex-grow: 1;
+}
+
+pre.block,
+.card,
+.bar-chart {
+    border-radius: 10px;
+}
+
+
+.card-header {
+    box-shadow: none;
+}
+
+.card-content {
+    padding: 1rem 1.5rem;
+}
+
+.badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background-color: #f2f2f2;
+    padding: 2px 8px;
+    border-radius: 20px;
+}
+
+p span.badge {
+    position: relative;
+    top: 4px;
+}
+
+.flex-list {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+}
+
+.badges {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.flex-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.flex-grid-item {
+    flex: 1;
+}
+
+.footer {
+    background-color: transparent;
 }

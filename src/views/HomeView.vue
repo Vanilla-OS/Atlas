@@ -1,19 +1,44 @@
 <template>
-  <div>
-    <ul v-if="recipes.length">
-      <li v-for="(recipe, index) in recipes" :key="index">
-        <h4>{{ recipe.name }}</h4>
-        <b>Modules: {{ recipe.modules ? recipe.modules.length : 0 }}</b>
+  <div v-if="recipes.length">
+    <section class="hero">
+      <div class="hero-body">
+        <p class="title">Vib Images</p>
+        <p class="subtitle">There are {{ recipes.length }} recipes available.</p>
+      </div>
+    </section>
+
+    <div class="flex-grid">
+      <div class="flex-grid-item" v-for="(recipe, index) in recipes" :key="index">
         <router-link :to="{ name: 'recipe', params: { id: recipe.id } }">
-          View Recipe
+          <div class="card">
+            <header class="card-header">
+              <div class="card-header-title flex-list">
+                <p>{{ recipe.name }}</p>
+                <p class="subtitle is-6">{{ recipe.base }}</p>
+              </div>
+            </header>
+            <div class="card-content">
+              <div class="content badges">
+                <span class="badge">
+                  <span class="mdi material-icons">extension</span>
+                  {{ recipe.modules.length }}
+                </span>
+                <span class="badge" v-if="recipe.runs">
+                  <span class="mdi material-icons">terminal</span>
+                  {{ recipe.runs.length }}
+                </span>
+                <span class="badge" v-if="recipe.labels" v-for="label in Object.keys(recipe.labels)">
+                  {{ label }}
+                </span>
+              </div>
+            </div>
+          </div>
         </router-link>
-        <br />
-        <br />
-      </li>
-    </ul>
-    <div v-else>
-      Loading...
+      </div>
     </div>
+  </div>
+  <div v-else>
+    Loading...
   </div>
 </template>
 

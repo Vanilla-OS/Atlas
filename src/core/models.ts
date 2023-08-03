@@ -30,6 +30,7 @@ interface VibRecipe {
   args: { [key: string]: string };
   runs: string[];
   modules: Module[];
+  snippet: string;
 }
 
 export type { VibRecipe, Module, Source };

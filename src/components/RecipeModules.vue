@@ -1,5 +1,13 @@
 <template>
     <div v-if="!moduleDetails">
+        <div class="field">
+            <div class="control has-icons-left">
+                <span class="icon is-small is-left">
+                    <i class="mdi material-icons">search</i>
+                </span>
+                <input class="input" type="search" v-model="searchQuery" placeholder="Search modules" />
+            </div>
+        </div>
         <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
             <thead>
                 <tr>
@@ -9,9 +17,14 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="(module, index) in recipe.modules" :key="index">
+                <tr v-for="(module, index) in filteredModules" :key="index">
                     <td>{{ module.name }}</td>
-                    <td>{{ module.type }}</td>
+                    <td>
+                        <div class="badge">
+                            <span class="mdi material-icons">{{ getModuleTypeClass(module.type) }}</span>
+                            {{ module.type }}
+                        </div>
+                    </td>
                     <td>
                         <button class="button" @click="showModuleDetails(module)">
                             <span class="icon">
@@ -20,7 +33,7 @@
                         </button>
                     </td>
                 </tr>
-                <tr v-if="!recipe.modules.length">
+                <tr v-if="filteredModules.length === 0">
                     <td colspan="3">No modules found.</td>
                 </tr>
             </tbody>
@@ -42,7 +55,12 @@
 
         <div class="block">
             <h3 class="title is-3">{{ moduleDetails.name }}</h3>
-            <p class="subtitle is-4">Module of type <u>{{ moduleDetails.type }}</u></p>
+            <p class="subtitle is-4">Module of type
+                <span class="badge">
+                    <span class="mdi material-icons">{{ getModuleTypeClass(moduleDetails.type) }}</span>
+                    <span>{{ moduleDetails.type }}</span>
+                </span>
+            </p>
         </div>
 
         <div class="block">
@@ -107,6 +125,9 @@
 </template>
 
 <script lang="ts">
+import atlasHelpers from "@/core/helpers";
+import type { Module } from "@/core/models";
+
 export default {
     props: {
         recipe: {
@@ -118,12 +139,32 @@ export default {
             default: null,
         },
     },
+    data() {
+        return {
+            searchQuery: '',
+        };
+    },
+    computed: {
+        filteredModules() {
+            const query = this.searchQuery.toLowerCase().trim();
+            if (!query) {
+                return this.recipe.modules;
+            }
+            return this.recipe.modules.filter((module: Module) =>
+                module.name.toLowerCase().includes(query) ||
+                module.type.toLowerCase().includes(query)
+            );
+        },
+    },
     methods: {
         showModuleDetails(module: any) {
             this.$emit("showModuleDetails", module);
         },
         goBack() {
             this.$emit("closeModuleDetails");
+        },
+        getModuleTypeClass(type: string) {
+            return atlasHelpers.getModuleTypeClass(type);
         },
     },
 };

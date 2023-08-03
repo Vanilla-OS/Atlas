@@ -20,7 +20,7 @@
                     </div>
                 </div>
             </div>
-            <div class="column">
+            <div class="column" v-if="recipe.labels">
                 <div class="card">
                     <header class="card-header">
                         <p class="card-header-title">
@@ -39,7 +39,7 @@
                     </div>
                 </div>
             </div>
-            <div class="column">
+            <div class="column" v-if="recipe.args">
                 <div class="card">
                     <header class="card-header">
                         <p class="card-header-title">
@@ -58,7 +58,7 @@
                     </div>
                 </div>
             </div>
-            <div class="column">
+            <div class="column" v-if="recipe.runs">
                 <div class="card">
                     <header class="card-header">
                         <p class="card-header-title">
@@ -80,15 +80,17 @@
         </div>
 
 
-        <div class="block">
-            <h3 class="title is-3">Modules Usage</h3>
-        </div>
+        <div v-if="recipe.modules.length">
+            <div class="block">
+                <h3 class="title is-3">Modules Usage</h3>
+            </div>
 
-        <div class="block">
-            <div class="bar-chart">
-                <div v-for="(moduleType, index) in chartData.labels" :key="index" class="bar-segment"
-                    :style="{ height: getSegmentHeight(moduleType) + '%' }">
-                    <span>{{ moduleType }} ({{ chartData.datasets[0].data[index] }})</span>
+            <div class="block">
+                <div class="bar-chart">
+                    <div v-for="(moduleType, index) in chartData.labels" :key="index" class="bar-segment"
+                        :style="{ height: getSegmentHeight(moduleType) + '%' }">
+                        <span>{{ moduleType }} ({{ chartData.datasets[0].data[index] }})</span>
+                    </div>
                 </div>
             </div>
         </div>
