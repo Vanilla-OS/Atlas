@@ -1,36 +1,40 @@
 <template>
-  <table class="table">
-    <tr>
-      <th>Name</th>
-      <th>Date</th>
-      <th>Size</th>
-      <th>Digest</th>
-    </tr>
-    <tr v-for="image in images" :key="image.name">
-      <td><router-link :to="{ name: 'Image', params: { image: image.name, tag: image.tag } }">{{ image.name }}</router-link></td>
-      <td>{{ image.pretty_create_date }}</td>
-      <td>{{ image.size_mb }} MB</td>
-      <td>{{ image.digest }}</td>
-    </tr>
-  </table>
+  <div>
+    <ul v-if="recipes.length">
+      <li v-for="(recipe, index) in recipes" :key="index">
+        <h4>{{ recipe.name }}</h4>
+        <b>Modules: {{ recipe.modules ? recipe.modules.length : 0 }}</b>
+        <router-link :to="{ name: 'recipe', params: { id: recipe.id } }">
+          View Recipe
+        </router-link>
+        <br />
+        <br />
+      </li>
+    </ul>
+    <div v-else>
+      Loading...
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
-  import { RegistryManager, OciImage } from '@/core/registry'
+import { defineComponent, ref } from 'vue';
+import AtlasManager from '@/core/manager';
+import type { VibRecipe } from '@/core/models';
 
-  export default defineComponent({
-    name: 'HomeView',
-
-    data() {
-      return {
-        images: ref<OciImage[]>([]),
-      }
-    },
-
-    async mounted() {
-      const registry = new RegistryManager()
-      this.images = await registry.get_images()
-    },
-  })
+export default defineComponent({
+  name: 'HomeView',
+  data() {
+    return {
+      recipes: [] as VibRecipe[],
+    };
+  },
+  async mounted() {
+    try {
+      this.recipes = await AtlasManager.getVibRecipes();
+    } catch (error) {
+      console.error('Error fetching recipes:', error);
+    }
+  },
+});
 </script>
