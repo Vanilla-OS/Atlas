@@ -9,4 +9,10 @@ export const useAtlasStore = defineStore('atlas', {
     persist: {
         storage: window.localStorage,
     },
+    actions: {
+        getVibRecipe(id: string): Promise<VibRecipe | null> {
+            const recipe = this.vibRecipes.find((r) => r.id === id);
+            return recipe ? Promise.resolve(recipe) : Promise.reject(null);
+        }
+    }
 });

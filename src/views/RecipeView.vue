@@ -45,7 +45,7 @@
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import type { VibRecipe } from "@/core/models";
-import AtlasManager from "@/core/manager";
+import { useAtlasStore } from "@/core/store";
 
 import RecipeDetails from "@/components/RecipeDetails.vue";
 import RecipeSnippet from "@/components/RecipeSnippet.vue";
@@ -60,6 +60,10 @@ export default defineComponent({
         RecipeModules,
         RecipeRuns,
     },
+    setup() {
+        const atlasStore = useAtlasStore();
+        return { atlasStore };
+    },
     data() {
         return {
             recipe: null as VibRecipe | null,
@@ -72,7 +76,7 @@ export default defineComponent({
         const { id } = router.currentRoute.value.params;
         try {
             // @ts-ignore
-            this.recipe = await AtlasManager.getVibRecipe(id);
+            this.recipe = await this.atlasStore.getVibRecipe(id);
         } catch (error) {
             console.error("Error fetching recipe:", error);
         }
