@@ -4,7 +4,7 @@
   "version": "2.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "run-p type-check build-only",
     "preview": "vite preview",
     "type-check": "vue-tsc --noEmit"
   },
