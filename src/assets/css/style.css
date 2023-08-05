@@ -109,3 +109,15 @@ p span.badge {
 .footer {
     background-color: transparent;
 }
+
+.navbar-menu {
+    display: initial !important;
+    background-color: transparent;
+    box-shadow: none;
+    padding: initial;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+}

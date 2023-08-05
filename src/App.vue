@@ -6,6 +6,19 @@
           <img src="/atlas-logo.svg" width="112" height="28">
         </router-link>
       </div>
+      <div class="navbar-menu">
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <button class="button is-light" @click="updateCache" title="Refresh">
+                <span class="icon is-small">
+                  <i class="md material-icons">refresh</i>
+                </span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </nav>
   </div>
 
@@ -37,6 +50,11 @@ export default defineComponent({
   },
   mounted() {
     this.title = AtlasConfig.title;
+  },
+  methods: {
+    updateCache() {
+      this.$atlasManager.getVibRecipes(true);
+    },
   },
 });
 </script>
