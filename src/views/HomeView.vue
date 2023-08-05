@@ -7,10 +7,10 @@
       </div>
     </section>
 
-    <article class="message is-warning" v-if="cacheIsOld">
+    <article class="message is-warning" v-if="cacheIsOld && !messageHidden">
       <div class="message-header">
         <p>Warning</p>
-        <button class="delete" aria-label="delete"></button>
+        <button class="delete" aria-label="delete" @click="hideWarning"></button>
       </div>
       <div class="message-body">
         Your local data is old than <u>12 hours</u>, which means that you may not see
@@ -71,6 +71,7 @@ export default defineComponent({
     return {
       cacheIsOld: false,
       refreshCacheTimer: 0,
+      messageHidden: false,
     };
   },
   setup() {
@@ -102,6 +103,7 @@ export default defineComponent({
     async updateCache() {
       try {
         this.cacheIsOld = false;
+        this.$atlasManager.getVibRecipes(true);
       } catch (error) {
         console.error("Error updating cache:", error);
       }
@@ -118,6 +120,9 @@ export default defineComponent({
         window.clearInterval(this.refreshCacheTimer);
         this.refreshCacheTimer = 0;
       }
+    },
+    hideWarning() {
+      this.messageHidden = true;
     },
   },
 });
