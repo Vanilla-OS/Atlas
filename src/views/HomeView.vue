@@ -1,9 +1,9 @@
 <template>
-  <div v-if="recipes.length">
+  <div v-if="atlasStore.vibRecipes.length">
     <section class="hero">
       <div class="hero-body">
         <p class="title">Vib Images</p>
-        <p class="subtitle">There are {{ recipes.length }} recipes available.</p>
+        <p class="subtitle">There are {{ atlasStore.vibRecipes.length }} recipes available.</p>
       </div>
     </section>
 
@@ -22,7 +22,7 @@
     </article>
 
     <div class="flex-grid">
-      <div class="flex-grid-item" v-for="(recipe, index) in recipes" :key="index">
+      <div class="flex-grid-item" v-for="(recipe, index) in atlasStore.vibRecipes" :key="index">
         <router-link :to="{ name: 'recipe', params: { id: recipe.id } }">
           <div class="card">
             <header class="card-header">
@@ -62,59 +62,61 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import AtlasManager from '@/core/manager';
-import type { VibRecipe } from '@/core/models';
+import { defineComponent } from "vue";
+import { useAtlasStore } from "@/core/store";
 
 export default defineComponent({
-  name: 'HomeView',
+  name: "HomeView",
   data() {
     return {
-      recipes: [] as VibRecipe[],
       cacheIsOld: false,
       refreshCacheTimer: 0,
     };
   },
-  async mounted() {
-    try {
-      this.recipes = await AtlasManager.getVibRecipes();
-      this.checkCacheOld();
-      this.setCacheRefreshTimer();
-    } catch (error) {
-      console.error('Error fetching recipes:', error);
-    }
+  setup() {
+    const atlasStore = useAtlasStore();
+    return { atlasStore };
   },
-  beforeUnmount() {
-    if (this.refreshCacheTimer != 0) {
-      window.clearInterval(this.refreshCacheTimer);
-      this.refreshCacheTimer = 0;
-    }
+  async beforeMount() {
+    this.fetchRecipes();
+    this.setCacheRefreshTimer();
   },
   methods: {
+    async fetchRecipes() {
+      try {
+        this.recipes = this.atlasStore.vibRecipes;
+      } catch (error) {
+        console.error("Error fetching recipes:", error);
+      }
+    },
+    checkCacheOld() {
+      console.log("Checking cache status..");
+      const lastFetchTimestamp = this.atlasStore.lastFetchDate;
+      if (lastFetchTimestamp) {
+        const lastFetchDate = new Date(lastFetchTimestamp); // Convert timestamp to Date object
+        const now = new Date();
+        const diff = now.getTime() - lastFetchDate.getTime();
+        this.cacheIsOld = diff > 1000 * 60 * 60 * 12;
+      }
+    },
+    async updateCache() {
+      try {
+        this.cacheIsOld = false;
+      } catch (error) {
+        console.error("Error updating cache:", error);
+      }
+    },
     setCacheRefreshTimer() {
-      if (this.refreshCacheTimer != 0) { return; }
+      if (this.refreshCacheTimer !== 0) return;
 
       this.refreshCacheTimer = window.setInterval(() => {
         this.checkCacheOld();
       }, 1000 * 60);
     },
-    async updateCache() {
-      try {
-        this.recipes = [];
-        this.recipes = await AtlasManager.getVibRecipes(true);
-        this.cacheIsOld = false;
-      } catch (error) {
-        console.error('Error updating cache:', error);
-      }
-    },
-    checkCacheOld() {
-      let fetchDate = AtlasManager.getFetchDate();
-      if (fetchDate) {
-        let now = new Date();
-        let diff = now.getTime() - fetchDate.getTime();
-        if (diff > 1000 * 60 * 60 * 12) {
-          this.cacheIsOld = true;
-        }
+    beforeUnmount() {
+      if (this.refreshCacheTimer !== 0) {
+        window.clearInterval(this.refreshCacheTimer);
+        this.refreshCacheTimer = 0;
       }
     },
   },
