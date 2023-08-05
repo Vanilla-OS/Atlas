@@ -48,13 +48,17 @@ class AtlasManager {
     store.setVibRecipes(recipes);
   }
 
-  public static async getVibRecipes(): Promise<VibRecipe[]> {
+  public static async getVibRecipes(force: boolean = false): Promise<VibRecipe[]> {
     console.log("Fetching VibRecipes...");
 
-    const cachedRecipes = this.getFromLocalStorage();
-    if (cachedRecipes !== null && cachedRecipes.length > 0) {
-      console.log("Fetched VibRecipes from local storage.");
-      return cachedRecipes;
+    if (!force) {
+      const cachedRecipes = this.getFromLocalStorage();
+      const lastFetchDate = localStorage.getItem("lastFetchDate");
+
+      if (cachedRecipes !== null && cachedRecipes.length > 0 && lastFetchDate) {
+        console.log("Using cached VibRecipes.");
+        return cachedRecipes;
+      }
     }
 
     const vibRecipes: VibRecipe[] = [];
@@ -123,6 +127,15 @@ class AtlasManager {
       if (recipe.id === id) {
         return recipe;
       }
+    }
+    return null;
+  }
+
+  public static getFetchDate(): Date | null {
+    const store = useAtlasStore();
+    const lastFetchDate = store.getLastFetchDate;
+    if (lastFetchDate) {
+      return new Date(lastFetchDate);
     }
     return null;
   }
