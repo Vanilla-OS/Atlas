@@ -2,6 +2,7 @@ import axios from "axios";
 import * as yaml from "js-yaml";
 import type { VibRecipe, Module } from "@/core/models";
 import AtlasConfig from "@/config";
+import { useAtlasStore } from '@/core/store';
 
 class AtlasManager {
   private static readonly storageKey = "vibRecipes";
@@ -37,35 +38,32 @@ class AtlasManager {
     }
   }
 
-  private static saveToLocalStorage(recipes: VibRecipe[]): void {
-    const serializedRecipes = JSON.stringify(recipes);
-    localStorage.setItem(this.storageKey, serializedRecipes);
+  private static getFromLocalStorage(): VibRecipe[] | null {
+    const store = useAtlasStore();
+    return store.getVibRecipes;
   }
 
-  private static getFromLocalStorage(): VibRecipe[] | null {
-    const serializedRecipes = localStorage.getItem(this.storageKey);
-    if (serializedRecipes) {
-      return JSON.parse(serializedRecipes) as VibRecipe[];
-    }
-    return null;
+  private static saveToLocalStorage(recipes: VibRecipe[]): void {
+    const store = useAtlasStore();
+    store.setVibRecipes(recipes);
   }
 
   public static async getVibRecipes(): Promise<VibRecipe[]> {
     console.log("Fetching VibRecipes...");
 
     const cachedRecipes = this.getFromLocalStorage();
-    if (cachedRecipes) {
+    if (cachedRecipes !== null && cachedRecipes.length > 0) {
       console.log("Fetched VibRecipes from local storage.");
       return cachedRecipes;
     }
 
     const vibRecipes: VibRecipe[] = [];
 
-    for (const repo of AtlasConfig.repos) {
-      console.log(`Fetching recipe.yml from ${repo}`);
-      const recipeYaml = await this.fetchRecipeFromRepo(repo);
-      if (recipeYaml !== null) {
-        try {
+    try {
+      const fetchPromises = AtlasConfig.repos.map(async (repo) => {
+        console.log(`Fetching recipe.yml from ${repo}`);
+        const recipeYaml = await this.fetchRecipeFromRepo(repo);
+        if (recipeYaml !== null) {
           console.log(`Parsing recipe.yml from ${repo}`);
           const recipeObject = yaml.load(recipeYaml) as VibRecipe;
           recipeObject.snippet = recipeYaml;
@@ -89,8 +87,7 @@ class AtlasManager {
                       modules.push(includedModule);
                     } catch (error) {
                       console.error(
-                        `Error parsing included module from ${repo}: ${
-                          (error as Error).message
+                        `Error parsing included module from ${repo}: ${(error as Error).message
                         }`
                       );
                     }
@@ -106,12 +103,12 @@ class AtlasManager {
           recipeObject.id = repo.replace("/", "-");
           recipeObject.modules = modules;
           vibRecipes.push(recipeObject);
-        } catch (error) {
-          console.error(
-            `Error parsing recipe.yml from ${repo}: ${(error as Error).message}`
-          );
         }
-      }
+      });
+
+      await Promise.all(fetchPromises);
+    } catch (error) {
+      console.error(`Error fetching or parsing recipes: ${(error as Error).message}`);
     }
 
     this.saveToLocalStorage(vibRecipes);
