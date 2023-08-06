@@ -12,7 +12,7 @@
             <div class="buttons">
               <button class="button is-light" @click="updateCache" title="Refresh">
                 <span class="icon is-small">
-                  <i class="md material-icons">refresh</i>
+                  <i class="mdi material-icons">refresh</i>
                 </span>
               </button>
             </div>
