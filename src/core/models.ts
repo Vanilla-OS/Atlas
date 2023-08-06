@@ -17,7 +17,6 @@ interface Module {
   modules?: { [key: string]: Module };
   includes?: string[];
   commands?: string[];
-  snippet?: string;
 }
 
 interface VibRecipe {
@@ -30,7 +29,6 @@ interface VibRecipe {
   args: { [key: string]: string };
   runs: string[];
   modules: Module[];
-  snippet: string;
 }
 
 export type { VibRecipe, Module, Source };

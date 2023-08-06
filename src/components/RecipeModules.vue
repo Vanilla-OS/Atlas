@@ -19,9 +19,9 @@
             <tbody v-for="(module, index) in filteredModules" :key="index">
                 <tr :class="hasNestedModules(module) ? 'has-background-white-ter' : ''">
                     <td>
-                        <div class="flex click">
+                        <div class="flex">
                             <span v-if="hasNestedModules(module)" @click="toggleNested(module)">
-                                <i class="mdi material-icons">
+                                <i class="mdi material-icons click">
                                     {{ isNestedExpanded(module) ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}
                                 </i>
                             </span>
@@ -80,7 +80,7 @@
 
         <div class="block">
             <h4 class="title is-4">Snippet</h4>
-            <pre class="block">{{ moduleDetails.snippet }}</pre>
+            <pre class="block">{{ toYaml(moduleDetails) }}</pre>
         </div>
 
         <div v-if="moduleDetails.path">
@@ -142,6 +142,7 @@
 <script lang="ts">
 import atlasHelpers from "@/core/helpers";
 import type { Module } from "@/core/models";
+import * as yaml from "js-yaml";
 
 export default {
     props: {
@@ -195,7 +196,9 @@ export default {
                 this.expandedModules.push(module);
             }
         },
-
+        toYaml(obj: any) {
+            return yaml.dump(obj);
+        },
     },
 };
 </script>

@@ -47,7 +47,6 @@ export default {
             if (recipeYaml !== null) {
               console.log(`Parsing recipe.yml from ${repo}`);
               const recipeObject = yaml.load(recipeYaml) as VibRecipe;
-              recipeObject.snippet = recipeYaml;
               const modules: Module[] = [];
 
               if (recipeObject.modules) {
@@ -66,7 +65,6 @@ export default {
                           const includedModule = yaml.load(
                             moduleContent
                           ) as Module;
-                          includedModule.snippet = moduleContent;
                           modules.push(includedModule);
                         } catch (error) {
                           console.error(
@@ -76,7 +74,6 @@ export default {
                       }
                     }
                   } else {
-                    module.snippet = yaml.dump(module);
                     modules.push(module);
                   }
                 }
