@@ -1,7 +1,7 @@
 <template>
     <ul>
         <li v-for="(value, index) in recipe.runs" :key="index">
-            <pre class="block">{{ value }}</pre>
+            <pre class="block" v-highlight:bash><code>{{ value }}</code></pre>
         </li>
     </ul>
 </template>

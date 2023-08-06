@@ -52,7 +52,7 @@ export default defineComponent({
     this.title = AtlasConfig.title;
   },
   methods: {
-    updateCache() {
+    updateCache() { // @ts-ignore
       this.$atlasManager.getVibRecipes(true);
     },
   },

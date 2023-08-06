@@ -1,6 +1,6 @@
 <template>
     <div>
-        <pre class="block" v-highlight-yaml><code>{{ toYaml(recipe) }}</code></pre>
+        <pre class="block" v-highlight:yaml><code>{{ toYaml(recipe) }}</code></pre>
     </div>
 </template>
 

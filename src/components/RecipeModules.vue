@@ -80,7 +80,7 @@
 
         <div class="block">
             <h4 class="title is-4">Snippet</h4>
-            <pre class="block">{{ toYaml(moduleDetails) }}</pre>
+            <pre class="block" v-highlight:yaml><code>{{ toYaml(moduleDetails) }}</code></pre>
         </div>
 
         <div v-if="moduleDetails.path">
@@ -132,7 +132,7 @@
             <h4 class="title is-4">Commands</h4>
             <ul>
                 <li v-for="(value, key) in moduleDetails.commands" :key="key">
-                    <pre class="block">{{ value }}</pre>
+                    <pre class="block" v-highlight:bash><code>{{ value }}</code></pre>
                 </li>
             </ul>
         </div>
