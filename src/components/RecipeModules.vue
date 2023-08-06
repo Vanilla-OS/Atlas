@@ -16,9 +16,18 @@
                     <th></th>
                 </tr>
             </thead>
-            <tbody>
-                <tr v-for="(module, index) in filteredModules" :key="index">
-                    <td>{{ module.name }}</td>
+            <tbody v-for="(module, index) in filteredModules" :key="index">
+                <tr :class="hasNestedModules(module) ? 'has-background-white-ter' : ''">
+                    <td>
+                        <div class="flex click">
+                            <span v-if="hasNestedModules(module)" @click="toggleNested(module)">
+                                <i class="mdi material-icons">
+                                    {{ isNestedExpanded(module) ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}
+                                </i>
+                            </span>
+                            {{ module.name }}
+                        </div>
+                    </td>
                     <td>
                         <div class="badge">
                             <span class="mdi material-icons">{{ getModuleTypeClass(module.type) }}</span>
@@ -33,11 +42,17 @@
                         </button>
                     </td>
                 </tr>
-                <tr v-if="filteredModules.length === 0">
-                    <td colspan="3">No modules found.</td>
+                <tr v-if="hasNestedModules(module) && isNestedExpanded(module)" class="has-background-light">
+                    <td colspan=" 3">
+                        <recipe-modules :recipe="module" :moduleDetails="moduleDetails"
+                            @showModuleDetails="showModuleDetails" @closeModuleDetails="goBack"></recipe-modules>
+                    </td>
                 </tr>
             </tbody>
         </table>
+        <div v-if="filteredModules.length === 0">
+            <td colspan="3">No modules found.</td>
+        </div>
     </div>
     <div v-else>
         <nav class="breadcrumb" aria-label="breadcrumbs">
@@ -141,7 +156,8 @@ export default {
     },
     data() {
         return {
-            searchQuery: '',
+            searchQuery: "",
+            expandedModules: [] as Module[],
         };
     },
     computed: {
@@ -150,9 +166,9 @@ export default {
             if (!query) {
                 return this.recipe.modules;
             }
-            return this.recipe.modules.filter((module: Module) =>
-                module.name.toLowerCase().includes(query) ||
-                module.type.toLowerCase().includes(query)
+            return this.recipe.modules.filter(
+                (module: Module) =>
+                    module.name.toLowerCase().includes(query) || module.type.toLowerCase().includes(query)
             );
         },
     },
@@ -166,6 +182,20 @@ export default {
         getModuleTypeClass(type: string) {
             return atlasHelpers.getModuleTypeClass(type);
         },
+        hasNestedModules(module: Module) {
+            return module.modules && Array.isArray(module.modules) && module.modules.length > 0;
+        },
+        isNestedExpanded(module: Module) {
+            return this.expandedModules.includes(module);
+        },
+        toggleNested(module: Module) {
+            if (this.isNestedExpanded(module)) {
+                this.expandedModules = this.expandedModules.filter((m) => m !== module);
+            } else {
+                this.expandedModules.push(module);
+            }
+        },
+
     },
 };
 </script>

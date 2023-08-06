@@ -121,3 +121,13 @@ p span.badge {
     display: flex;
     justify-content: space-between;
 }
+
+.flex {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.click {
+    cursor: pointer;
+}
