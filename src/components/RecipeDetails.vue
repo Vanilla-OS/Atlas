@@ -88,7 +88,7 @@
             <div class="block">
                 <div class="bar-chart">
                     <div v-for="(moduleType, index) in chartData.labels" :key="index" class="bar-segment"
-                        :style="{ height: getSegmentHeight(moduleType) + '%' }">
+                        :style="{ height: getSegmentHeight(moduleType) + '%' }" :class="getSegmentUsageClass(moduleType)">
                         <span>{{ moduleType }} ({{ chartData.datasets[0].data[index] }})</span>
                     </div>
                 </div>
@@ -135,6 +135,23 @@ export default defineComponent({
                 return 9;
             }
             return res;
+        },
+        getSegmentUsageClass(moduleType: string) {
+            const moduleCount = this.chartData.datasets[0].data[this.chartData.labels.indexOf(moduleType)];
+            const totalModules = this.recipe.modules.length;
+            const usage = (moduleCount / totalModules) * 100;
+            console.log(usage);
+            if (usage > 50) {
+                return "bar-segment--high";
+            }
+            if (usage > 40) {
+                return "bar-segment--medium";
+            }
+            if (usage > 15) {
+                return "bar-segment--low";
+            }
+            return "bar-segment--very-low";
+
         },
     },
 });

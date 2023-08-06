@@ -35,6 +35,8 @@ pre.block {
     margin-top: 10px;
     width: 100%;
     overflow: hidden;
+    gap: 10px;
+    padding: 10px;
 }
 
 .bar-segment:hover {
@@ -52,6 +54,7 @@ pre.block {
     transition: height 0.2s;
     padding: 8px 10px;
     flex-grow: 1;
+    border-radius: 10px;
 }
 
 pre.block,
@@ -59,7 +62,6 @@ pre.block,
 .bar-chart {
     border-radius: 10px;
 }
-
 
 .card-header {
     box-shadow: none;
@@ -130,4 +132,16 @@ p span.badge {
 
 .click {
     cursor: pointer;
+}
+
+.bar-segment.bar-segment--medium {
+    background-color: #455dc5;
+}
+
+.bar-segment.bar-segment--low {
+    background-color: #5d77e7;
+}
+
+.bar-segment.bar-segment--very-low {
+    background-color: #768ffb;
 }
