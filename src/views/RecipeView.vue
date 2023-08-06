@@ -13,13 +13,21 @@
                     <a @click="curTab = 'details'">Details</a>
                 </li>
                 <li :class="{ 'is-active': curTab === 'snippet' }">
-                    <a @click="curTab = 'snippet'">Code</a>
+                    <a @click="curTab = 'snippet'">Recipe</a>
                 </li>
                 <li :class="{ 'is-active': curTab === 'modules' }">
                     <a @click="curTab = 'modules'">Modules</a>
                 </li>
                 <li :class="{ 'is-active': curTab === 'runs' }">
                     <a @click="curTab = 'runs'">Runs</a>
+                </li>
+                <li>
+                    <a :href="recipeSourceUrl" target="_blank">
+                        <span>Source</span>
+                        <span class="icon is-small">
+                            <i class="mdi material-icons">open_in_new</i>
+                        </span>
+                    </a>
                 </li>
             </ul>
         </div>
@@ -46,6 +54,7 @@ import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
 import type { VibRecipe } from "@/core/models";
 import { useAtlasStore } from "@/core/store";
+import AtlasConfig from "@/config";
 
 import RecipeDetails from "@/components/RecipeDetails.vue";
 import RecipeSnippet from "@/components/RecipeSnippet.vue";
@@ -84,6 +93,14 @@ export default defineComponent({
     methods: {
         showModuleDetails(module: any) {
             this.moduleDetails = module;
+        },
+    },
+    computed: {
+        recipeSourceUrl() {
+            if (!this.recipe) {
+                return "";
+            }
+            return `${AtlasConfig.publicRegistry}/${this.recipe.repo}`;
         },
     },
 });

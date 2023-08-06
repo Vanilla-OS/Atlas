@@ -1,5 +1,6 @@
 class AtlasConfig {
   public static readonly registry = "https://raw.githubusercontent.com";
+  public static readonly publicRegistry = "https://github.com";
   public static readonly title = "Vanilla OS Registry";
   public static readonly repos = [
     "vanilla-os/pico-image",

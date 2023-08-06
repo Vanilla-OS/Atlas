@@ -47,6 +47,7 @@ export default {
             if (recipeYaml !== null) {
               console.log(`Parsing recipe.yml from ${repo}`);
               const recipeObject = yaml.load(recipeYaml) as VibRecipe;
+              recipeObject.repo = repo;
               const modules: Module[] = [];
 
               if (recipeObject.modules) {

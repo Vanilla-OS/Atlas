@@ -20,6 +20,7 @@ interface Module {
 }
 
 interface VibRecipe {
+  repo: string;
   id: string;
   recipeObject: any;
   base: string;
