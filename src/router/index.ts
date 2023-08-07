@@ -16,6 +16,11 @@ const router = createRouter({
       name: "recipe",
       component: RecipeView,
     },
+    {
+      path: "/recipe/:id/module/:module",
+      name: "recipe-module",
+      component: RecipeView,
+    },
   ],
 });
 

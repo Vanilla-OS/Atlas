@@ -1,4 +1,5 @@
 class AtlasConfig {
+  public static readonly publicUrl = "https://images.vanillaos.org";
   public static readonly registry = "https://raw.githubusercontent.com";
   public static readonly publicRegistry = "https://github.com";
   public static readonly title = "Vanilla OS Registry";

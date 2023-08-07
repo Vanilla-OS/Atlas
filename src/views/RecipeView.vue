@@ -82,12 +82,28 @@ export default defineComponent({
     },
     async mounted() {
         const router = useRouter();
-        const { id } = router.currentRoute.value.params;
+        const { id, module } = router.currentRoute.value.params; // Extract the 'module' parameter
+
         try {
             // @ts-ignore
             this.recipe = await this.atlasStore.getVibRecipe(id);
         } catch (error) {
             console.error("Error fetching recipe:", error);
+        }
+
+        if (module && this.recipe?.modules) {
+            this.curTab = "modules";
+
+            try {
+                for (const mod of this.recipe.modules) {
+                    if (mod.name === module) {
+                        this.moduleDetails = mod;
+                        break;
+                    }
+                }
+            } catch (error) {
+                console.error("Error fetching module details:", error);
+            }
         }
     },
     methods: {
