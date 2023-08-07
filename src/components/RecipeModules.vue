@@ -35,11 +35,14 @@
                         </div>
                     </td>
                     <td>
-                        <button class="button" @click="showModuleDetails(module)">
-                            <span class="icon">
-                                <i class="material-icons">list</i>
-                            </span>
-                        </button>
+                        <div class="buttons">
+                            <button class="button" @click="showModuleDetails(module)" title="Show module details">
+                                <span class="icon">
+                                    <i class="material-icons">list</i>
+                                </span>
+                            </button>
+                            <copy-btn :textToCopy="getRouteToModule(module)" title="Copy link to module"></copy-btn>
+                        </div>
                     </td>
                 </tr>
                 <tr v-if="hasNestedModules(module) && isNestedExpanded(module)" class="has-background-light">
@@ -69,7 +72,10 @@
         </nav>
 
         <div class="block">
-            <h3 class="title is-3">{{ moduleDetails.name }}</h3>
+            <h3 class="title is-3">
+                {{ moduleDetails.name }}
+                <copy-btn :textToCopy="getRouteToModule(moduleDetails)" title="Copy link to module"></copy-btn>
+            </h3>
             <p class="subtitle is-4">Module of type
                 <span class="badge">
                     <span class="mdi material-icons">{{ getModuleTypeClass(moduleDetails.type) }}</span>
@@ -143,8 +149,14 @@
 import atlasHelpers from "@/core/helpers";
 import type { Module } from "@/core/models";
 import * as yaml from "js-yaml";
+import { defineComponent } from "vue";
+import CopyBtn from "./CopyBtn.vue";
+import AtlasConfig from "@/config";
 
-export default {
+export default defineComponent({
+    components: {
+        CopyBtn,
+    },
     props: {
         recipe: {
             type: Object,
@@ -199,6 +211,9 @@ export default {
         toYaml(obj: any) {
             return yaml.dump(obj);
         },
+        getRouteToModule(module: any) {
+            return `${AtlasConfig.publicUrl}/recipes/${this.recipe.id}/modules/${module.name}`;
+        },
     },
-};
+});
 </script>
