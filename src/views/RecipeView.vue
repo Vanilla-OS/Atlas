@@ -82,7 +82,7 @@ export default defineComponent({
     },
     async mounted() {
         const router = useRouter();
-        const { id, module } = router.currentRoute.value.params; // Extract the 'module' parameter
+        const { id, module } = router.currentRoute.value.params;
 
         try {
             // @ts-ignore
