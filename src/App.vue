@@ -41,6 +41,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import AtlasConfig from "./config";
+import { useAtlasStore } from "@/core/store";
 
 export default defineComponent({
   data() {
@@ -48,11 +49,20 @@ export default defineComponent({
       title: "",
     };
   },
+  setup() {
+    const atlasStore = useAtlasStore();
+    return { atlasStore };
+  },
   mounted() {
     this.title = AtlasConfig.title;
   },
   methods: {
-    updateCache() { // @ts-ignore
+    updateCache() {
+      this.atlasStore.$patch((state) => {
+        state.lastFetchDate = new Date().getTime();
+        state.vibRecipes = [];
+      });
+      // @ts-ignore
       this.$atlasManager.getVibRecipes(true);
     },
   },
