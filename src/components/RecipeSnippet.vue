@@ -1,5 +1,11 @@
 <template>
     <div>
+        <article class="message is-info">
+            <div class="message-body">
+                This is the expanded version of the recipe, for the original version click the Source tab from the
+                navigation menu.
+            </div>
+        </article>
         <pre class="block" v-highlight:yaml><code>{{ toYaml(recipe) }}</code></pre>
     </div>
 </template>
