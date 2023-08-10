@@ -1,5 +1,5 @@
 <template>
-  <div v-if="atlasStore.vibRecipes.length">
+  <div v-if="atlasStore.vibRecipes">
     <section class="hero">
       <div class="hero-body">
         <p class="title">Vib Images</p>
@@ -85,7 +85,8 @@ export default defineComponent({
   methods: {
     async fetchRecipes() {
       try {
-        this.recipes = this.atlasStore.vibRecipes;
+        // @ts-ignore
+        this.$atlasManager.getVibRecipes(false);
       } catch (error) {
         console.error("Error fetching recipes:", error);
       }
@@ -103,6 +104,11 @@ export default defineComponent({
     async updateCache() {
       try {
         this.cacheIsOld = false;
+        this.atlasStore.$patch((state) => {
+          state.lastFetchDate = new Date().getTime();
+          state.vibRecipes = [];
+        });
+        // @ts-ignore
         this.$atlasManager.getVibRecipes(true);
       } catch (error) {
         console.error("Error updating cache:", error);
