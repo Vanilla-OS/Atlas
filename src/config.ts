@@ -10,6 +10,7 @@ class AtlasConfig {
     "vanilla-os/vso-image",
     "vanilla-os/desktop-image",
     "vanilla-os/nvidia-image",
+    "vanilla-os/waydroid-image",
   ];
 }
 
