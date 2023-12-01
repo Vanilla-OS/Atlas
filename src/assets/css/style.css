@@ -99,9 +99,9 @@ p span.badge {
 }
 
 .flex-grid {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
     gap: 10px;
+    grid-template-columns: auto auto auto;
 }
 
 .flex-grid-item {

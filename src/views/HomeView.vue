@@ -41,9 +41,6 @@
                   <span class="mdi material-icons">terminal</span>
                   {{ recipe.runs.length }}
                 </span>
-                <span class="badge" v-if="recipe.labels" v-for="label in Object.keys(recipe.labels)">
-                  {{ label }}
-                </span>
               </div>
             </div>
           </div>
