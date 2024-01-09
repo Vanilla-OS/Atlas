@@ -11,6 +11,7 @@ class AtlasConfig {
     "vanilla-os/desktop-image",
     "vanilla-os/nvidia-image",
     "vanilla-os/waydroid-image",
+    "vanilla-os/vm-image",
   ];
 }
 
