@@ -1,25 +1,27 @@
 <template>
-  <div class="container">
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <router-link to="/" class="navbar-item">
-          <img src="/atlas-logo.svg" width="112" height="28">
-        </router-link>
-      </div>
-      <div class="navbar-menu">
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <div class="buttons">
-              <button class="button is-light" @click="updateCache" title="Refresh">
-                <span class="icon is-small">
-                  <i class="mdi material-icons">refresh</i>
-                </span>
-              </button>
+  <div class="topbar">
+    <div class="container">
+      <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <router-link to="/" class="navbar-item">
+            <img src="/atlas-logo.svg" width="112" height="28">
+          </router-link>
+        </div>
+        <div class="navbar-menu">
+          <div class="navbar-end">
+            <div class="navbar-item">
+              <div class="buttons">
+                <button class="button is-light" @click="updateCache" title="Refresh">
+                  <span class="icon is-small">
+                    <i class="mdi material-icons">refresh</i>
+                  </span>
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   </div>
 
   <div class="container">

@@ -88,8 +88,14 @@ p span.badge {
 .flex-list {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
     gap: 5px;
+    align-items: stretch;
+}
+
+.flex-list-item.recipe-card .card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .badges {
@@ -144,4 +150,13 @@ p span.badge {
 
 .bar-segment.bar-segment--very-low {
     background-color: #768ffb;
+}
+
+.topbar {
+    background-color: #fff;
+    border-bottom: 1px solid #dddddd;
+    margin: 0 0 18px;
+    position: sticky;
+    top: 0;
+    z-index: 99
 }
