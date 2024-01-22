@@ -1,16 +1,5 @@
 <template>
   <div v-if="atlasStore.vibRecipes">
-    <nav class="navbar">
-      <div class="navbar-brand">
-        <button class="button navbar-item" @click="toggleView">
-          <span class="icon is-small">
-            <i class="mdi material-icons" v-if="isGridView">view_list</i>
-            <i class="mdi material-icons" v-else>view_module</i>
-          </span>
-        </button>
-      </div>
-    </nav>
-
     <section class="hero">
       <div class="hero-body">
         <p class="title">Vib Images</p>
@@ -32,9 +21,10 @@
       </div>
     </article>
 
-    <div :class="{ 'flex-list': !isGridView, 'flex-grid': isGridView }">
+    <div :class="{ 'flex-list': atlasStore.layout == 'list', 'flex-grid': atlasStore.layout == 'grid' }">
       <div v-for="(recipe, index) in atlasStore.vibRecipes" :key="index"
-        :class="{ 'flex-list-item': !isGridView, 'flex-grid-item': isGridView }" class="recipe-card">
+        :class="{ 'flex-list-item': atlasStore.layout == 'list', 'flex-grid-item': atlasStore.layout == 'grid' }"
+        class="recipe-card">
         <router-link :to="{ name: 'recipe', params: { id: recipe.id } }">
           <div class="card">
             <header class="card-header">
@@ -81,7 +71,6 @@ export default defineComponent({
       cacheIsOld: false,
       refreshCacheTimer: 0,
       messageHidden: false,
-      isGridView: true,
     };
   },
   setup() {
@@ -89,15 +78,10 @@ export default defineComponent({
     return { atlasStore };
   },
   async beforeMount() {
-    this.setLayout();
     this.fetchRecipes();
     this.setCacheRefreshTimer();
   },
   methods: {
-    setLayout() {
-      const layout = this.atlasStore.layout;
-      this.isGridView = layout === "grid";
-    },
     async fetchRecipes() {
       try {
         // @ts-ignore
@@ -144,12 +128,6 @@ export default defineComponent({
     },
     hideWarning() {
       this.messageHidden = true;
-    },
-    toggleView() {
-      this.isGridView = !this.isGridView;
-      this.atlasStore.$patch((state) => {
-        state.layout = this.isGridView ? "grid" : "list";
-      });
     },
   },
 });

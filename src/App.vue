@@ -11,6 +11,14 @@
           <div class="navbar-end">
             <div class="navbar-item">
               <div class="buttons">
+                <button class="button is-light" @click="setLayout"
+                  :title="atlasStore.layout == 'list' ? 'Switch to grid view' : 'Switch to list view'"
+                  v-if="route.name == 'home'">
+                  <span class="icon is-small">
+                    <i class="mdi material-icons" v-if="atlasStore.layout == 'list'">view_list</i>
+                    <i class="mdi material-icons" v-else>view_module</i>
+                  </span>
+                </button>
                 <button class="button is-light" @click="updateCache" title="Refresh">
                   <span class="icon is-small">
                     <i class="mdi material-icons">refresh</i>
@@ -51,6 +59,11 @@ export default defineComponent({
       title: "",
     };
   },
+  computed: {
+    route() {
+      return this.$route;
+    },
+  },
   setup() {
     const atlasStore = useAtlasStore();
     return { atlasStore };
@@ -59,6 +72,12 @@ export default defineComponent({
     this.title = AtlasConfig.title;
   },
   methods: {
+    setLayout() {
+      this.atlasStore.$patch((state) => {
+        state.layout = state.layout == "list" ? "grid" : "list";
+      });
+      console.log(this.atlasStore.layout);
+    },
     updateCache() {
       this.atlasStore.$patch((state) => {
         state.lastFetchDate = new Date().getTime();
