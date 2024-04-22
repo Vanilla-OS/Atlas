@@ -19,12 +19,10 @@ interface Module {
   commands?: string[];
 }
 
-interface VibRecipe {
-  repo: string;
+interface Stage {
   id: string;
   recipeObject: any;
   base: string;
-  name: string;
   singlelayer: boolean;
   labels: { [key: string]: string };
   args: { [key: string]: string };
@@ -32,4 +30,11 @@ interface VibRecipe {
   modules: Module[];
 }
 
-export type { VibRecipe, Module, Source };
+interface VibRecipe {
+  name: string;
+  repo: string;
+  id: string;
+  stages: Stage[];
+}
+
+export type { VibRecipe, Module, Source, Stage };

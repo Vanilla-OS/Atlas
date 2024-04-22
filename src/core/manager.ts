@@ -46,51 +46,32 @@ export default {
             const recipeYaml = await this.fetchRecipeFromRepo(repo);
             if (recipeYaml !== null) {
               console.log(`Parsing recipe.yml from ${repo}`);
-              const recipeObject = yaml.load(recipeYaml) as VibRecipe;
-              recipeObject.repo = repo;
-              const modules: Module[] = [];
-
-              if (recipeObject.modules) {
-                for (const module of recipeObject.modules) {
+              const recipeData = yaml.load(recipeYaml) as VibRecipe;
+              recipeData.repo = repo;
+              // @ts-ignore
+              recipeData.stages = await Promise.all(recipeData.stages.map(async stage => {
+                const processedModules = stage.modules ? await Promise.all(stage.modules.map(async module => {
                   if (module.includes) {
-                    console.log(
-                      `Fetching and processing included modules for ${repo}`
-                    );
-                    for (const includePath of module.includes) {
-                      const moduleContent = await this.fetchModuleContentFromRepo(
-                        repo,
-                        includePath
-                      );
-                      if (moduleContent) {
-                        try {
-                          const includedModule = yaml.load(
-                            moduleContent
-                          ) as Module;
-                          modules.push(includedModule);
-                        } catch (error) {
-                          console.error(
-                            `Error parsing included module from ${repo}: ${(error as Error).message}`
-                          );
-                        }
-                      }
-                    }
-                  } else {
-                    modules.push(module);
+                    console.log(`Fetching and processing included modules for ${repo}`);
+                    return {
+                      ...module,
+                      modules: await Promise.all(module.includes.map(async includePath => {
+                        const moduleContent = await this.fetchModuleContentFromRepo(repo, includePath);
+                        return moduleContent ? yaml.load(moduleContent) as Module : module;
+                      }))
+                    };
                   }
-                }
-              }
-
-              recipeObject.id = repo.replace("/", "-");
-              recipeObject.modules = modules;
-              vibRecipes.push(recipeObject);
+                  return module;
+                })) : [];
+                return { ...stage, modules: processedModules };
+              }));
+              vibRecipes.push(recipeData);
             }
           });
 
           await Promise.all(fetchPromises);
         } catch (error) {
-          console.error(
-            `Error fetching or parsing recipes: ${(error as Error).message}`
-          );
+          console.error(`Error fetching or parsing recipes: ${(error as Error).message}`);
         }
 
         store.$patch({ vibRecipes: vibRecipes });
@@ -102,12 +83,7 @@ export default {
 
       async getVibRecipe(id: string): Promise<VibRecipe | null> {
         const vibRecipes = await this.getVibRecipes(false);
-        for (const recipe of vibRecipes) {
-          if (recipe.id === id) {
-            return recipe;
-          }
-        }
-        return null;
+        return vibRecipes.find(recipe => recipe.id === id) || null;
       },
 
       async getFetchDate(): Promise<Date | null> {
@@ -124,9 +100,7 @@ export default {
           const response = await axios.get(url);
           return response.data;
         } catch (error) {
-          console.error(
-            `Error fetching recipe.yml from ${repo}: ${(error as Error).message}`
-          );
+          console.error(`Error fetching recipe.yml from ${repo}: ${(error as Error).message}`);
           return null;
         }
       },
@@ -135,14 +109,12 @@ export default {
         repo: string,
         path: string
       ): Promise<string | null> {
-        const url = `${AtlasConfig.registry}/${repo}/main/${path}.yml`;
+        const url = `${AtlasConfig.registry}/${repo}/main/${path}`;
         try {
           const response = await axios.get(url);
           return response.data;
         } catch (error) {
-          console.error(
-            `Error fetching module content from ${url}: ${(error as Error).message}`
-          );
+          console.error(`Error fetching module content from ${url}: ${(error as Error).message}`);
           return null;
         }
       },
@@ -155,9 +127,9 @@ export default {
   },
 };
 
+// @ts-ignore
 declare module "@vue/runtime-core" {
-  //Bind to `this` keyword
-  interface IAtlasManager {
+  interface ComponentCustomProperties {
     $atlasManager: IAtlasManager;
   }
 }

@@ -14,7 +14,8 @@ class AtlasConfig {
     "vanilla-os/vm-image",
     "vanilla-os/custom-image",
     "vanilla-os/chronos",
-    "vanilla-os/chronos-fe",
+    "vanilla-os/chronos-frontend",
+    "vanilla-os/website"
   ];
 }
 
