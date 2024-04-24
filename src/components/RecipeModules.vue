@@ -8,53 +8,54 @@
                 <input class="input" type="search" v-model="searchQuery" placeholder="Search modules" />
             </div>
         </div>
-        <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-            <thead>
-                <tr>
-                    <th><abbr>Name</abbr></th>
-                    <th><abbr>Type</abbr></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody v-for="(module, index) in filteredModules" :key="index">
-                <tr :class="hasNestedModules(module) ? 'has-background-white-ter' : ''">
-                    <td>
-                        <div class="flex">
-                            <span v-if="hasNestedModules(module)" @click="toggleNested(module)">
-                                <i class="mdi material-icons click">
-                                    {{ isNestedExpanded(module) ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}
-                                </i>
-                            </span>
-                            {{ module.name }}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="badge">
-                            <span class="mdi material-icons">{{ getModuleTypeClass(module.type) }}</span>
-                            {{ module.type }}
-                        </div>
-                    </td>
-                    <td>
-                        <div class="buttons">
-                            <button class="button" @click="showModuleDetails(module)" title="Show module details">
-                                <span class="icon">
-                                    <i class="material-icons">list</i>
+
+        <div v-for="(group, groupIndex) in moduleGroups" :key="groupIndex">
+            <h2 class="title is-4" v-if="groupIndex != 'nested'">Stage "{{ groupIndex }}"</h2>
+            <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
+                <thead>
+                    <tr>
+                        <th><abbr>Name</abbr></th>
+                        <th><abbr>Type</abbr></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody v-for="(module, index) in group" :key="index">
+                    <tr :class="hasNestedModules(module) ? 'has-background-white-ter' : ''">
+                        <td>
+                            <div class="flex">
+                                <span v-if="hasNestedModules(module)" @click="toggleNested(module)">
+                                    <i class="mdi material-icons click">
+                                        {{ isNestedExpanded(module) ? 'keyboard_arrow_down' : 'keyboard_arrow_right' }}
+                                    </i>
                                 </span>
-                            </button>
-                            <copy-btn :textToCopy="getRouteToModule(module)" title="Copy link to module"></copy-btn>
-                        </div>
-                    </td>
-                </tr>
-                <tr v-if="hasNestedModules(module) && isNestedExpanded(module)" class="has-background-light">
-                    <td colspan=" 3">
-                        <recipe-modules :recipe="module" :moduleDetails="moduleDetails"
-                            @showModuleDetails="showModuleDetails" @closeModuleDetails="goBack"></recipe-modules>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-        <div v-if="filteredModules.length === 0">
-            <td colspan="3">No modules found.</td>
+                                {{ module.name }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="badge">
+                                <span class="mdi material-icons">{{ getModuleTypeClass(module.type) }}</span>
+                                {{ module.type }}
+                            </div>
+                        </td>
+                        <td>
+                            <div class="buttons">
+                                <button class="button" @click="showModuleDetails(module)" title="Show module details">
+                                    <span class="icon">
+                                        <i class="material-icons">list</i>
+                                    </span>
+                                </button>
+                                <copy-btn :textToCopy="getRouteToModule(module)" title="Copy link to module"></copy-btn>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr v-if="hasNestedModules(module) && isNestedExpanded(module)" class="has-background-light">
+                        <td colspan=" 3">
+                            <recipe-modules :recipe="module" :moduleDetails="moduleDetails"
+                                @showModuleDetails="showModuleDetails" @closeModuleDetails="goBack"></recipe-modules>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
     </div>
     <div v-else>
@@ -147,7 +148,7 @@
 
 <script lang="ts">
 import atlasHelpers from "@/core/helpers";
-import type { Module } from "@/core/models";
+import type { Module, Stage } from "@/core/models";
 import * as yaml from "js-yaml";
 import { defineComponent } from "vue";
 import CopyBtn from "./CopyBtn.vue";
@@ -171,19 +172,17 @@ export default defineComponent({
         return {
             searchQuery: "",
             expandedModules: [] as Module[],
+            moduleGroups: {} as Record<string, Module[]>,
         };
     },
-    computed: {
-        filteredModules() {
-            const query = this.searchQuery.toLowerCase().trim();
-            if (!query) {
-                return this.recipe.modules;
-            }
-            return this.recipe.modules.filter(
-                (module: Module) =>
-                    module.name.toLowerCase().includes(query) || module.type.toLowerCase().includes(query)
-            );
-        },
+    mounted() {
+        if (!this.recipe.stages) {
+            this.moduleGroups["nested"] = this.recipe.modules;
+            return;
+        }
+        this.recipe.stages.forEach((stage: Stage) => {
+            this.moduleGroups[stage.id] = stage.modules;
+        });
     },
     methods: {
         showModuleDetails(module: any) {

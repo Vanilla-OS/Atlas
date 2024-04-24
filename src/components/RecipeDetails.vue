@@ -14,7 +14,7 @@
                     <div class="card-content">
                         <div class="content">
                             <span class="title is-1">
-                                {{ recipe.modules.length }}
+                                {{ getModulesCount(recipe.stages) }}
                             </span>
                         </div>
                     </div>
@@ -71,7 +71,7 @@
                     <div class="card-content">
                         <div class="content">
                             <span class="title is-1">
-                                {{ recipe.runs.length }}
+                                {{ getRunsCount(recipe.stages) }}
                             </span>
                         </div>
                     </div>
@@ -80,7 +80,7 @@
         </div>
 
 
-        <div v-if="recipe.modules.length">
+        <div v-if="getModulesCount(recipe.stages) > 0">
             <div class="block">
                 <h3 class="title is-3">Modules Usage</h3>
             </div>
@@ -88,7 +88,8 @@
             <div class="block">
                 <div class="bar-chart">
                     <div v-for="(moduleType, index) in chartData.labels" :key="index" class="bar-segment"
-                        :style="{ height: getSegmentHeight(moduleType) + '%' }" :class="getSegmentUsageClass(moduleType)">
+                        :style="{ height: getSegmentHeight(moduleType) + '%' }"
+                        :class="getSegmentUsageClass(moduleType)">
                         <span>{{ moduleType }} ({{ chartData.datasets[0].data[index] }})</span>
                     </div>
                 </div>
@@ -111,9 +112,11 @@ export default defineComponent({
     computed: {
         chartData() {
             const moduleTypesCount: Record<string, number> = {};
-            for (const module of this.recipe.modules) {
-                const moduleType = module.type;
-                moduleTypesCount[moduleType] = (moduleTypesCount[moduleType] || 0) + 1;
+            for (const stage of this.recipe.stages) {
+                for (const module of stage.modules) {
+                    const moduleType = module.type;
+                    moduleTypesCount[moduleType] = (moduleTypesCount[moduleType] || 0) + 1;
+                }
             }
             return {
                 labels: Object.keys(moduleTypesCount),
@@ -129,7 +132,7 @@ export default defineComponent({
     methods: {
         getSegmentHeight(moduleType: string) {
             const moduleCount = this.chartData.datasets[0].data[this.chartData.labels.indexOf(moduleType)];
-            const totalModules = this.recipe.modules.length;
+            const totalModules = this.getAllModulesCount();
             const res = (moduleCount / totalModules) * 100;
             if (res < 9) {
                 return 9;
@@ -138,9 +141,9 @@ export default defineComponent({
         },
         getSegmentUsageClass(moduleType: string) {
             const moduleCount = this.chartData.datasets[0].data[this.chartData.labels.indexOf(moduleType)];
-            const totalModules = this.recipe.modules.length;
+            const totalModules = this.getAllModulesCount();
             const usage = (moduleCount / totalModules) * 100;
-            console.log(usage);
+
             if (usage > 50) {
                 return "bar-segment--high";
             }
@@ -151,7 +154,34 @@ export default defineComponent({
                 return "bar-segment--low";
             }
             return "bar-segment--very-low";
+        },
+        getModulesCount(stages: any[]) {
+            let result = 0;
 
+            stages.forEach((stage) => {
+                if (!stage.modules) return;
+                result += stage.modules.length;
+            });
+
+            return result;
+        },
+        getRunsCount(stages: any[]) {
+            let result = 0;
+
+            stages.forEach((stage) => {
+                if (!stage.runs) return;
+                result += stage.runs.length;
+            });
+
+            return result;
+        },
+        getAllModulesCount() {
+            let result = 0;
+            for (const stage of this.recipe.stages) {
+                if (!stage.modules) continue;
+                result += stage.modules.length;
+            }
+            return result;
         },
     },
 });

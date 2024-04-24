@@ -30,18 +30,18 @@
             <header class="card-header">
               <div class="card-header-title flex-list">
                 <p>{{ recipe.name }}</p>
-                <p class="subtitle is-6">{{ recipe.base }}</p>
+                <p class="subtitle is-6">{{ recipe.repo }}</p>
               </div>
             </header>
             <div class="card-content">
               <div class="content badges">
                 <span class="badge">
                   <span class="mdi material-icons">extension</span>
-                  {{ recipe.modules.length }}
+                  {{ getModulesCount(recipe.stages) }}
                 </span>
-                <span class="badge" v-if="recipe.runs">
+                <span class="badge">
                   <span class="mdi material-icons">terminal</span>
-                  {{ recipe.runs.length }}
+                  {{ getRunsCount(recipe.stages) }}
                 </span>
               </div>
             </div>
@@ -128,6 +128,26 @@ export default defineComponent({
     },
     hideWarning() {
       this.messageHidden = true;
+    },
+    getModulesCount(stages: any[]) {
+      let result = 0;
+
+      stages.forEach((stage) => {
+        if (!stage.modules) return;
+        result += stage.modules.length;
+      });
+
+      return result;
+    },
+    getRunsCount(stages: any[]) {
+      let result = 0;
+
+      stages.forEach((stage) => {
+        if (!stage.runs) return;
+        result += stage.runs.length;
+      });
+
+      return result;
     },
   },
 });

@@ -3,7 +3,7 @@
         <section class="hero">
             <div class="hero-body">
                 <p class="title">{{ recipe.name }}</p>
-                <p class="subtitle">Based on: {{ recipe.base }}</p>
+                <p class="subtitle">{{ recipe.repo }}</p>
             </div>
         </section>
 
@@ -36,8 +36,8 @@
 
         <RecipeSnippet v-else-if="curTab === 'snippet'" :recipe="recipe" />
 
-        <RecipeModules v-if="curTab === 'modules' && !moduleDetails" :recipe="recipe" @showModuleDetails="showModuleDetails"
-            @closeModuleDetails="moduleDetails = null" />
+        <RecipeModules v-if="curTab === 'modules' && !moduleDetails" :recipe="recipe"
+            @showModuleDetails="showModuleDetails" @closeModuleDetails="moduleDetails = null" />
 
         <RecipeModules v-else-if="curTab === 'modules' && moduleDetails" :recipe="recipe" :moduleDetails="moduleDetails"
             @showModuleDetails="showModuleDetails" @closeModuleDetails="moduleDetails = null" />
@@ -52,7 +52,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { useRouter } from "vue-router";
-import type { VibRecipe } from "@/core/models";
+import type { Module, VibRecipe } from "@/core/models";
 import { useAtlasStore } from "@/core/store";
 import AtlasConfig from "@/config";
 
@@ -75,7 +75,7 @@ export default defineComponent({
     },
     data() {
         return {
-            recipe: null as VibRecipe | null,
+            recipe: null as any,
             curTab: "details",
             moduleDetails: null as any,
         };
