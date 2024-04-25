@@ -1,97 +1,51 @@
 <template>
-    <div>
-        <div class="columns">
-            <div class="column">
-                <div class="card">
-                    <header class="card-header">
-                        <p class="card-header-title">
-                            <span class="icon">
-                                <i class="material-icons">extension</i>
-                            </span>
-                            <span>Modules</span>
-                        </p>
-                    </header>
-                    <div class="card-content">
-                        <div class="content">
-                            <span class="title is-1">
-                                {{ getModulesCount(recipe.stages) }}
-                            </span>
-                        </div>
+    <div class="flex flex-wrap py-4">
+        <div class="flex flex-col w-full lg:w-1/3 p-2">
+            <div class="w-full p-2">
+                <div class="bg-white rounded shadow flex justify-between items-center p-4">
+                    <div class="flex items-center">
+                        <i class="material-icons text-gray-700 mr-2">extension</i>
+                        <span class="font-semibold">Modules</span>
                     </div>
+                    <span class="text-4xl">{{ getModulesCount() }}</span>
                 </div>
             </div>
-            <div class="column" v-if="recipe.labels">
-                <div class="card">
-                    <header class="card-header">
-                        <p class="card-header-title">
-                            <span class="icon">
-                                <i class="material-icons">label</i>
-                            </span>
-                            <span>Labels</span>
-                        </p>
-                    </header>
-                    <div class="card-content">
-                        <div class="content">
-                            <span class="title is-1">
-                                {{ Object.keys(recipe.labels).length }}
-                            </span>
-                        </div>
+            <div class="w-full p-2">
+                <div class="bg-white rounded shadow flex justify-between items-center p-4">
+                    <div class="flex items-center">
+                        <i class="material-icons text-gray-700 mr-2">layers</i>
+                        <span class="font-semibold">Stages</span>
                     </div>
+                    <span class="text-4xl">{{ recipe.stages.length }}</span>
                 </div>
             </div>
-            <div class="column" v-if="recipe.args">
-                <div class="card">
-                    <header class="card-header">
-                        <p class="card-header-title">
-                            <span class="icon">
-                                <i class="material-icons">settings</i>
-                            </span>
-                            <span>Args</span>
-                        </p>
-                    </header>
-                    <div class="card-content">
-                        <div class="content">
-                            <span class="title is-1">
-                                {{ Object.keys(recipe.args).length }}
-                            </span>
-                        </div>
+            <div class="w-full p-2">
+                <div class="bg-white rounded shadow flex justify-between items-center p-4">
+                    <div class="flex items-center">
+                        <i class="material-icons text-gray-700 mr-2">settings</i>
+                        <span class="font-semibold">Args</span>
                     </div>
+                    <span class="text-4xl">{{ getArgsCount() }}</span>
                 </div>
             </div>
-            <div class="column" v-if="recipe.runs">
-                <div class="card">
-                    <header class="card-header">
-                        <p class="card-header-title">
-                            <span class="icon">
-                                <i class="material-icons">play_arrow</i>
-                            </span>
-                            <span>Runs</span>
-                        </p>
-                    </header>
-                    <div class="card-content">
-                        <div class="content">
-                            <span class="title is-1">
-                                {{ getRunsCount(recipe.stages) }}
-                            </span>
-                        </div>
+            <div class="w-full p-2">
+                <div class="bg-white rounded shadow flex justify-between items-center p-4">
+                    <div class="flex items-center">
+                        <i class="material-icons text-gray-700 mr-2">play_arrow</i>
+                        <span class="font-semibold">Runs</span>
                     </div>
+                    <span class="text-4xl">{{ getRunsCount() }}</span>
                 </div>
             </div>
         </div>
-
-
-        <div v-if="getModulesCount(recipe.stages) > 0">
-            <div class="block">
-                <h3 class="title is-3">Modules Usage</h3>
-            </div>
-
-            <div class="block">
-                <div class="bar-chart">
-                    <div v-for="(moduleType, index) in chartData.labels" :key="index" class="bar-segment"
-                        :style="{ height: getSegmentHeight(moduleType) + '%' }"
-                        :class="getSegmentUsageClass(moduleType)">
-                        <span>{{ moduleType }} ({{ chartData.datasets[0].data[index] }})</span>
-                    </div>
+        <div class="w-full lg:w-2/3 p-2">
+            <div class="bg-white rounded shadow">
+                <div class="p-4 flex items-center">
+                    <i class="material-icons text-gray-700 mr-2">pie_chart</i>
+                    <span class="font-semibold">Modules Usage</span>
+                </div>
+                <div class="p-4 text-center">
+                    <canvas id="modulesPieChart"></canvas>
                 </div>
             </div>
         </div>
@@ -100,6 +54,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import type { Stage } from "@/core/models";
+import Chart from 'chart.js/auto';
 
 export default defineComponent({
     name: "RecipeView",
@@ -112,77 +68,95 @@ export default defineComponent({
     computed: {
         chartData() {
             const moduleTypesCount: Record<string, number> = {};
-            for (const stage of this.recipe.stages) {
-                for (const module of stage.modules) {
+            this.recipe.stages.forEach((stage: Stage) => {
+                stage.modules.forEach(module => {
                     const moduleType = module.type;
                     moduleTypesCount[moduleType] = (moduleTypesCount[moduleType] || 0) + 1;
-                }
-            }
+                });
+            });
             return {
                 labels: Object.keys(moduleTypesCount),
-                datasets: [
-                    {
-                        // @ts-ignore
-                        data: Object.values(moduleTypesCount),
-                    },
-                ],
+                datasets: [{
+                    // @ts-ignore
+                    data: Object.values(moduleTypesCount),
+                }],
             };
         },
     },
     methods: {
-        getSegmentHeight(moduleType: string) {
-            const moduleCount = this.chartData.datasets[0].data[this.chartData.labels.indexOf(moduleType)];
-            const totalModules = this.getAllModulesCount();
-            const res = (moduleCount / totalModules) * 100;
-            if (res < 9) {
-                return 9;
-            }
-            return res;
+        initChart() {
+            // @ts-ignore
+            const ctx = document.getElementById('modulesPieChart').getContext('2d');
+            new Chart(ctx, {
+                type: 'pie',
+                data: this.chartData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                boxWidth: 10,
+                                usePointStyle: true
+                            }
+                        }
+                    }
+                }
+            });
         },
-        getSegmentUsageClass(moduleType: string) {
-            const moduleCount = this.chartData.datasets[0].data[this.chartData.labels.indexOf(moduleType)];
-            const totalModules = this.getAllModulesCount();
-            const usage = (moduleCount / totalModules) * 100;
-
-            if (usage > 50) {
-                return "bar-segment--high";
-            }
-            if (usage > 40) {
-                return "bar-segment--medium";
-            }
-            if (usage > 15) {
-                return "bar-segment--low";
-            }
-            return "bar-segment--very-low";
-        },
-        getModulesCount(stages: any[]) {
+        getModulesCount() {
             let result = 0;
 
-            stages.forEach((stage) => {
+            for (const stage of this.recipe.stages) {
                 if (!stage.modules) return;
                 result += stage.modules.length;
-            });
+            }
 
             return result;
         },
-        getRunsCount(stages: any[]) {
+        getRunsCount() {
             let result = 0;
 
-            stages.forEach((stage) => {
+            for (const stage of this.recipe.stages) {
                 if (!stage.runs) return;
                 result += stage.runs.length;
-            });
+            }
 
             return result;
         },
         getAllModulesCount() {
             let result = 0;
+
             for (const stage of this.recipe.stages) {
                 if (!stage.modules) continue;
                 result += stage.modules.length;
             }
+
             return result;
         },
+        getArgsCount() {
+            let result = 0;
+
+            for (const arg of this.recipe.stages) {
+                if (!arg.args) continue;
+                result += Object.keys(arg.args).length;
+            }
+
+            return result;
+        }
+    },
+    mounted() {
+        this.initChart();
     },
 });
 </script>
+
+<style scoped>
+.canvas-container {
+    position: relative;
+    height: 40vh;
+    width: 100%;
+}
+</style>

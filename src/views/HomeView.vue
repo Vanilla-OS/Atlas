@@ -1,63 +1,119 @@
 <template>
   <div v-if="atlasStore.vibRecipes">
-    <section class="hero">
-      <div class="hero-body">
-        <p class="title">Vib Images</p>
-        <p class="subtitle">There are {{ atlasStore.vibRecipes.length }} recipes available.</p>
+
+    <section class="bg-gray-100 dark:bg-gray-800 text-black dark:text-gray-200 text-center py-8">
+      <div class="container mx-auto px-4">
+        <h1 class="text-3xl font-bold">Vib Images</h1>
+        <p class="mt-4">There are {{ atlasStore.vibRecipes.length }} recipes available.</p>
       </div>
     </section>
 
-    <article class="message is-warning" v-if="cacheIsOld && !messageHidden">
-      <div class="message-header">
-        <p>Warning</p>
-        <button class="delete" aria-label="delete" @click="hideWarning"></button>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
+      <div v-if="atlasStore.layout === 'list'">
+        <table class="min-w-full bg-white rounded shadow">
+          <thead class="bg-gray-200">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                Recipe Name
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                Repository
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                Stages
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                Modules
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                Runs
+              </th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                Actions
+              </th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr v-for="(recipe, index) in atlasStore.vibRecipes" :key="index">
+              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                {{ recipe.name }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ recipe.repo }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ recipe.stages.length }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ getModulesCount(recipe.stages) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                {{ getRunsCount(recipe.stages) }}
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <router-link :to="{ name: 'recipe', params: { id: recipe.id } }"
+                  class="text-indigo-600 hover:text-indigo-900">View</router-link>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
-      <div class="message-body">
-        Your local data is older than <u>12 hours</u>, which means that you may not see
-        the latest recipes. Do you want to update it now?
-        <br />
-        <br />
-        <button class="button is-warning" @click="updateCache">Update cache</button>
-      </div>
-    </article>
-
-    <div :class="{ 'flex-list': atlasStore.layout == 'list', 'flex-grid': atlasStore.layout == 'grid' }">
-      <div v-for="(recipe, index) in atlasStore.vibRecipes" :key="index"
-        :class="{ 'flex-list-item': atlasStore.layout == 'list', 'flex-grid-item': atlasStore.layout == 'grid' }"
-        class="recipe-card">
-        <router-link :to="{ name: 'recipe', params: { id: recipe.id } }">
-          <div class="card">
-            <header class="card-header">
-              <div class="card-header-title flex-list">
-                <p>{{ recipe.name }}</p>
-                <p class="subtitle is-6">{{ recipe.repo }}</p>
+      <div v-else class="grid grid-cols-3 gap-4">
+        <div v-for="(recipe, index) in atlasStore.vibRecipes" :key="index"
+          class="bg-white rounded-lg shadow p-6 flex flex-col justify-between leading-normal">
+          <router-link :to="{ name: 'recipe', params: { id: recipe.id } }" class="no-underline text-black">
+            <div>
+              <div class="mb-4">
+                <div class="text-black font-bold text-xl mb-2">{{ recipe.name }}</div>
+                <code class=" text-gray-800 text-xs font-medium-full md:w-auto block">{{ recipe.repo }}</code>
               </div>
-            </header>
-            <div class="card-content">
-              <div class="content badges">
-                <span class="badge">
-                  <span class="mdi material-icons">extension</span>
+              <div class="flex items-center">
+                <span
+                  class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded gap-2">
+                  <span class="material-icons align-middle text-base">layers</span>
+                  {{ recipe.stages.length }}
+                </span>
+                <span
+                  class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded gap-2">
+                  <span class="material-icons align-middle text-base">extension</span>
                   {{ getModulesCount(recipe.stages) }}
                 </span>
-                <span class="badge">
-                  <span class="mdi material-icons">terminal</span>
+                <span
+                  class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded gap-2">
+                  <span class="material-icons align-middle text-base">terminal</span>
                   {{ getRunsCount(recipe.stages) }}
                 </span>
               </div>
             </div>
-          </div>
-        </router-link>
+          </router-link>
+        </div>
       </div>
     </div>
   </div>
   <div v-else>
-    <section class="hero">
-      <div class="hero-body">
-        <p class="title">Loading...</p>
-        <p class="subtitle">Please wait while we fetch the recipes.</p>
+    <transition name="fade">
+      <div
+        class="fixed bottom-0 right-0 m-8 max-w-sm w-full bg-blue-500 text-white py-4 px-6 rounded-lg shadow-lg text-center">
+        <p class="text-xl">Loading...</p>
+        <p>Please wait while we fetch the recipes.</p>
       </div>
-    </section>
+    </transition>
   </div>
+
+  <transition name="fade">
+    <div v-if="cacheIsOld && !messageHidden"
+      class="fixed bottom-16 right-0 m-8 max-w-sm w-full bg-yellow-300 text-yellow-900 p-4 rounded-lg shadow-lg">
+      <div class="flex justify-between items-center">
+        <p class="font-bold">Warning</p>
+        <button class="bg-transparent text-2xl" aria-label="close" @click="hideWarning">&#10005;</button>
+      </div>
+      <p>Your local data is older than <u>12 hours</u>, which means that you may not see the latest recipes. Do you want
+        to update it now?</p>
+      <button class="mt-2 py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600" @click="updateCache">Update
+        cache</button>
+    </div>
+  </transition>
+
 </template>
 
 <script lang="ts">
@@ -152,3 +208,15 @@ export default defineComponent({
   },
 });
 </script>
+
+<style>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+</style>
