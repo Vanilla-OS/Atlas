@@ -5,7 +5,9 @@
                 Source tab from the navigation menu.</span>
         </div>
         <div class="snippet rounded shadow p-4">
-            <pre class="block" v-highlight:yaml><code>{{ toYaml(recipe) }}</code></pre>
+            <div class="overflow-x-auto">
+                <pre class="block" v-highlight:yaml><code>{{ toYaml(recipe) }}</code></pre>
+            </div>
         </div>
     </div>
 </template>

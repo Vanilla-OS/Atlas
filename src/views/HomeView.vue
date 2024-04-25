@@ -10,55 +10,57 @@
 
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
       <div v-if="atlasStore.layout === 'list'">
-        <table class="min-w-full bg-white rounded shadow">
-          <thead class="bg-gray-200">
-            <tr>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
-                Recipe Name
-              </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
-                Repository
-              </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
-                Stages
-              </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
-                Modules
-              </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
-                Runs
-              </th>
-              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
-                Actions
-              </th>
-            </tr>
-          </thead>
-          <tbody class="bg-white divide-y divide-gray-200">
-            <tr v-for="(recipe, index) in atlasStore.vibRecipes" :key="index">
-              <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                {{ recipe.name }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {{ recipe.repo }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {{ recipe.stages.length }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {{ getModulesCount(recipe.stages) }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                {{ getRunsCount(recipe.stages) }}
-              </td>
-              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                <router-link :to="{ name: 'recipe', params: { id: recipe.id } }"
-                  class="text-indigo-600 hover:text-indigo-900">View</router-link>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div class="overflow-x-auto">
+          <table class="min-w-full bg-white rounded shadow">
+            <thead class="bg-gray-200">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                  Recipe Name
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                  Repository
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                  Stages
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                  Modules
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                  Runs
+                </th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                  Actions
+                </th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <tr v-for="(recipe, index) in atlasStore.vibRecipes" :key="index">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                  {{ recipe.name }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ recipe.repo }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ recipe.stages.length }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ getModulesCount(recipe.stages) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {{ getRunsCount(recipe.stages) }}
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  <router-link :to="{ name: 'recipe', params: { id: recipe.id } }"
+                    class="text-indigo-600 hover:text-indigo-900">View</router-link>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div v-else class="grid grid-cols-3 gap-4">
+      <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div v-for="(recipe, index) in atlasStore.vibRecipes" :key="index"
           class="bg-white rounded-lg shadow p-6 flex flex-col justify-between leading-normal">
           <router-link :to="{ name: 'recipe', params: { id: recipe.id } }" class="no-underline text-black">
@@ -115,6 +117,7 @@
   </transition>
 
 </template>
+
 
 <script lang="ts">
 import { defineComponent } from "vue";
