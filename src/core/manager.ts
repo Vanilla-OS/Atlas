@@ -10,10 +10,11 @@ export interface IAtlasManager {
   getVibRecipes(force: boolean): Promise<VibRecipe[]>;
   getVibRecipe(id: string): Promise<VibRecipe | null>;
   getFetchDate(): Promise<Date | null>;
-  fetchRecipeFromRepo(repo: string): Promise<string | null>;
+  fetchRecipeFromRepo(repo: string, branch: string): Promise<string | null>;
   fetchModuleContentFromRepo(
     repo: string,
-    path: string
+    path: string,
+    branch: string
   ): Promise<string | null>;
 }
 
@@ -42,8 +43,15 @@ export default {
 
         try {
           const fetchPromises = AtlasConfig.repos.map(async (repo) => {
-            console.log(`Fetching recipe.yml from ${repo}`);
-            const recipeYaml = await this.fetchRecipeFromRepo(repo);
+            let branch = "main";
+            const repoParts = repo.split(":");
+            if (repoParts.length > 1) {
+              repo = repoParts[0];
+              branch = repoParts[1];
+            }
+
+            console.log(`Fetching recipe.yml from ${repo} using branch ${branch}`);
+            const recipeYaml = await this.fetchRecipeFromRepo(repo, branch);
             if (recipeYaml !== null) {
               console.log(`Parsing recipe.yml from ${repo}`);
               const recipeData = yaml.load(recipeYaml) as VibRecipe;
@@ -56,7 +64,7 @@ export default {
                     return {
                       ...module,
                       modules: await Promise.all(module.includes.map(async includePath => {
-                        const moduleContent = await this.fetchModuleContentFromRepo(repo, includePath);
+                        const moduleContent = await this.fetchModuleContentFromRepo(repo, includePath, branch);
                         return moduleContent ? yaml.load(moduleContent) as Module : module;
                       }))
                     };
@@ -94,8 +102,8 @@ export default {
         return null;
       },
 
-      async fetchRecipeFromRepo(repo: string): Promise<string | null> {
-        const url = `${AtlasConfig.registry}/${repo}/main/recipe.yml`;
+      async fetchRecipeFromRepo(repo: string, branch: string = "main"): Promise<string | null> {
+        const url = `${AtlasConfig.registry}/${repo}/${branch}/recipe.yml`;
         try {
           const response = await axios.get(url);
           return response.data;
@@ -105,11 +113,8 @@ export default {
         }
       },
 
-      async fetchModuleContentFromRepo(
-        repo: string,
-        path: string
-      ): Promise<string | null> {
-        const url = `${AtlasConfig.registry}/${repo}/main/${path}`;
+      async fetchModuleContentFromRepo(repo: string, path: string, branch: string = "main"): Promise<string | null> {
+        const url = `${AtlasConfig.registry}/${repo}/${branch}/${path}`;
         try {
           const response = await axios.get(url);
           return response.data;
