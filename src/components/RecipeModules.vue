@@ -31,7 +31,7 @@
                                         <span v-if="hasNestedModules(module)" @click="toggleNested(module)">
                                             <i class="material-icons cursor-pointer">
                                                 {{ isNestedExpanded(module) ? 'keyboard_arrow_down' :
-                                                'keyboard_arrow_right'
+                                                    'keyboard_arrow_right'
                                                 }}
                                             </i>
                                         </span>
@@ -75,53 +75,55 @@
 
         </div>
         <div v-else>
-            <nav class="breadcrumb" aria-label="breadcrumbs">
-                <ul>
+            <nav class="flex items-center space-x-2" aria-label="breadcrumbs">
+                <ul class="flex">
                     <li>
-                        <a @click="goBack">
-                            <span class="icon">
-                                <i class="material-icons">arrow_back</i>
-                            </span>
+                        <a @click="goBack"
+                            class="flex items-center space-x-1 text-blue-600 hover:text-blue-800 cursor-pointer">
+                            <i class="material-icons">arrow_back</i>
                             <span>Back</span>
                         </a>
                     </li>
                 </ul>
             </nav>
 
-            <div class="block">
-                <h3 class="title is-3">
+            <div>
+                <h3 class="text-3xl font-bold mt-4">
                     {{ moduleDetails.name }}
                     <copy-btn :textToCopy="getRouteToModule(moduleDetails)" title="Copy link to module"></copy-btn>
                 </h3>
-                <p class="subtitle is-4">Module of type
-                    <span class="badge">
-                        <span class="mdi material-icons">{{ getModuleTypeClass(moduleDetails.type) }}</span>
+                <p class="text-xl mt-1 flex gap-2">Module of type
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded text-sm font-medium"
+                        :class="getModuleTypeColors(moduleDetails.type)">
+                        <i class="mdi material-icons">{{ getModuleTypeClass(moduleDetails.type) }}</i>
                         <span>{{ moduleDetails.type }}</span>
                     </span>
                 </p>
             </div>
 
-            <div class="block">
-                <h4 class="title is-4">Snippet</h4>
-                <pre class="block" v-highlight:yaml><code>{{ toYaml(moduleDetails) }}</code></pre>
+            <div>
+                <h4 class="text-xl font-bold mt-4 mb-4">Snippet</h4>
+                <pre class="bg-gray-100 rounded p-4 overflow-x-auto"><code>{{ toYaml(moduleDetails) }}</code></pre>
             </div>
 
-            <div v-if="moduleDetails.path">
-                <b>Path:</b> {{ moduleDetails.path }}
+            <div v-if="moduleDetails.path" class="mt-4">
+                <strong>Path:</strong> {{ moduleDetails.path }}
             </div>
 
-            <div v-if="moduleDetails.source" class="block">
-                <h4 class="title is-4">Source</h4>
-                <table class="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
-                    <thead>
+            <div v-if="moduleDetails.source" class="mt-4">
+                <h4 class="text-xl font-bold mb-4">Source</h4>
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <th><abbr>Key</abbr></th>
-                            <th><abbr>Value</abbr></th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Key</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                Value</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="bg-white divide-y divide-gray-200">
                         <tr v-for="(value, key) in moduleDetails.source" :key="key">
-                            <th>{{ key }}</th>
+                            <th class="px-6 py-4 whitespace-nowrap">{{ key }}</th>
                             <td v-if="typeof value === 'string'">{{ value }}</td>
                             <td v-else-if="typeof value === 'object'">
                                 <ul>
@@ -133,8 +135,8 @@
                 </table>
             </div>
 
-            <div v-if="moduleDetails.buildFlags" class="block">
-                <h4 class="title is-4">Build Flags</h4>
+            <div v-if="moduleDetails.buildFlags" class="mt-4">
+                <h4 class="text-xl font-bold mb-4">Build Flags</h4>
                 <ul>
                     <li v-for="(value, key) in moduleDetails.buildFlags" :key="key">
                         <span>{{ key }}</span>
@@ -142,8 +144,8 @@
                 </ul>
             </div>
 
-            <div v-if="moduleDetails.buildvars" class="block">
-                <h4 class="title is-4">Build Vars</h4>
+            <div v-if="moduleDetails.buildvars" class="mt-4">
+                <h4 class="text-xl font-bold mb-4">Build Vars</h4>
                 <ul>
                     <li v-for="(value, key) in moduleDetails.buildvars" :key="key">
                         <span>{{ key }}</span>
@@ -151,11 +153,11 @@
                 </ul>
             </div>
 
-            <div v-if="moduleDetails.commands" class="block">
-                <h4 class="title is-4">Commands</h4>
+            <div v-if="moduleDetails.commands" class="mt-4">
+                <h4 class="text-xl font-bold mb-4">Commands</h4>
                 <ul>
                     <li v-for="(value, key) in moduleDetails.commands" :key="key">
-                        <pre class="block" v-highlight:bash><code>{{ value }}</code></pre>
+                        <pre class="bg-gray-100 rounded p-4 overflow-x-auto"><code>{{ value }}</code></pre>
                     </li>
                 </ul>
             </div>
