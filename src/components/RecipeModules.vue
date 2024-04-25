@@ -103,7 +103,11 @@
 
             <div>
                 <h4 class="text-xl font-bold mt-4 mb-4">Snippet</h4>
-                <pre class="bg-gray-100 rounded p-4 overflow-x-auto"><code>{{ toYaml(moduleDetails) }}</code></pre>
+                <div class="snippet rounded shadow p-4">
+                    <div class="overflow-x-auto">
+                        <pre class="block" v-highlight:yaml><code>{{ toYaml(moduleDetails) }}</code></pre>
+                    </div>
+                </div>
             </div>
 
             <div v-if="moduleDetails.path" class="mt-4">
@@ -155,9 +159,9 @@
 
             <div v-if="moduleDetails.commands" class="mt-4">
                 <h4 class="text-xl font-bold mb-4">Commands</h4>
-                <ul>
+                <ul class="flex flex-col gap-4">
                     <li v-for="(value, key) in moduleDetails.commands" :key="key">
-                        <pre class="bg-gray-100 rounded p-4 overflow-x-auto"><code>{{ value }}</code></pre>
+                        <pre class="snippet rounded p-4 overflow-x-auto" v-highlight:bash><code>{{ value }}</code></pre>
                     </li>
                 </ul>
             </div>
@@ -238,3 +242,9 @@ export default defineComponent({
     },
 });
 </script>
+
+<style scoped>
+.snippet {
+    background-color: #282c34;
+}
+</style>
