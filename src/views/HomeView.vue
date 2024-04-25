@@ -191,10 +191,19 @@ export default defineComponent({
     getModulesCount(stages: any[]) {
       let result = 0;
 
-      stages.forEach((stage) => {
-        if (!stage.modules) return;
-        result += stage.modules.length;
-      });
+      for (const stage of stages) {
+        if (!stage.modules) continue;
+
+        console.log(stage.modules);
+
+        for (const module of stage.modules) {
+          if (module.modules && module.modules.length > 0) {
+            result += module.modules.length;
+          } else {
+            result++;
+          }
+        }
+      }
 
       return result;
     },

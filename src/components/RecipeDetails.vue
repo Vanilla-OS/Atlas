@@ -7,7 +7,7 @@
                         <i class="material-icons text-gray-700 mr-2">extension</i>
                         <span class="font-semibold">Modules</span>
                     </div>
-                    <span class="text-4xl">{{ getModulesCount() }}</span>
+                    <span class="text-4xl">{{ getAllModulesCount() }}</span>
                 </div>
             </div>
             <div class="w-full p-2">
@@ -72,6 +72,14 @@ export default defineComponent({
                 stage.modules.forEach(module => {
                     const moduleType = module.type;
                     moduleTypesCount[moduleType] = (moduleTypesCount[moduleType] || 0) + 1;
+
+                    if (module.modules) {
+                        // @ts-ignore
+                        for (const subModule of module.modules) {
+                            const subModuleType = subModule.type;
+                            moduleTypesCount[subModuleType] = (moduleTypesCount[subModuleType] || 0) + 1;
+                        }
+                    }
                 });
             });
             return {
@@ -131,7 +139,16 @@ export default defineComponent({
 
             for (const stage of this.recipe.stages) {
                 if (!stage.modules) continue;
-                result += stage.modules.length;
+
+                console.log(stage.modules);
+
+                for (const module of stage.modules) {
+                    if (module.modules && module.modules.length > 0) {
+                        result += module.modules.length;
+                    } else {
+                        result++;
+                    }
+                }
             }
 
             return result;
