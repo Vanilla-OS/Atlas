@@ -9,62 +9,68 @@
 
             <div v-for="(group, groupIndex) in moduleGroups" :key="groupIndex">
                 <h2 class="text-xl font-bold py-4" v-if="groupIndex != 'nested'">Stage "{{ groupIndex }}"</h2>
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Name</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                Type</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody v-for="(module, index) in group" :key="index" class="bg-white divide-y divide-gray-200">
-                        <tr :class="hasNestedModules(module) ? 'bg-gray-100' : ''">
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <span v-if="hasNestedModules(module)" @click="toggleNested(module)">
-                                        <i class="material-icons cursor-pointer">
-                                            {{ isNestedExpanded(module) ? 'keyboard_arrow_down' : 'keyboard_arrow_right'
-                                            }}
-                                        </i>
-                                    </span>
-                                    {{ module.name }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="flex items-center">
-                                    <span
-                                        class="inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded gap-2"
-                                        :class="getModuleTypeColors(module.type)">
-                                        <span class="material-icons align-middle text-base">
-                                            {{ getModuleTypeClass(module.type) }}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Name</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                    Type</th>
+                                <th
+                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody v-for="(module, index) in group" :key="index" class="bg-white divide-y divide-gray-200">
+                            <tr :class="hasNestedModules(module) ? 'bg-gray-100' : ''">
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <span v-if="hasNestedModules(module)" @click="toggleNested(module)">
+                                            <i class="material-icons cursor-pointer">
+                                                {{ isNestedExpanded(module) ? 'keyboard_arrow_down' :
+                                                'keyboard_arrow_right'
+                                                }}
+                                            </i>
                                         </span>
-                                        {{ module.type }}
-                                    </span>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex items-center space-x-2">
-                                    <button class="py-2 px-3 rounded" @click="showModuleDetails(module)"
-                                        title="Show module details">
-                                        <i class="material-icons text-md">list</i>
-                                    </button>
-                                    <copy-btn :textToCopy="getRouteToModule(module)"
-                                        title="Copy link to module"></copy-btn>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr v-if="hasNestedModules(module) && isNestedExpanded(module)" class="bg-gray-50">
-                            <td colspan="3" class="px-6 py-4 whitespace-nowrap">
-                                <recipe-modules :recipe="module" :moduleDetails="moduleDetails"
-                                    @showModuleDetails="showModuleDetails"
-                                    @closeModuleDetails="goBack"></recipe-modules>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+                                        {{ module.name }}
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap">
+                                    <div class="flex items-center">
+                                        <span
+                                            class="inline-flex items-center text-xs font-medium mr-2 px-2.5 py-0.5 rounded gap-2"
+                                            :class="getModuleTypeColors(module.type)">
+                                            <span class="material-icons align-middle text-base">
+                                                {{ getModuleTypeClass(module.type) }}
+                                            </span>
+                                            {{ module.type }}
+                                        </span>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                                    <div class="flex items-center space-x-2">
+                                        <button class="py-2 px-3 rounded" @click="showModuleDetails(module)"
+                                            title="Show module details">
+                                            <i class="material-icons text-md">list</i>
+                                        </button>
+                                        <copy-btn :textToCopy="getRouteToModule(module)"
+                                            title="Copy link to module"></copy-btn>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr v-if="hasNestedModules(module) && isNestedExpanded(module)" class="bg-gray-50">
+                                <td colspan="3" class="px-6 py-4 whitespace-nowrap">
+                                    <recipe-modules :recipe="module" :moduleDetails="moduleDetails"
+                                        @showModuleDetails="showModuleDetails"
+                                        @closeModuleDetails="goBack"></recipe-modules>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
 
         </div>
