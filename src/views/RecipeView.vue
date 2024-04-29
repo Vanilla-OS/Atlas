@@ -160,7 +160,7 @@ export default defineComponent({
             return `${AtlasConfig.publicRegistry}/${this.recipe.repo}`.toLowerCase();
         },
         pullCommand() {
-            const baseCommand = `pull ${AtlasConfig.pullRegistry}/${this.recipe?.id}`.toLowerCase();
+            const baseCommand = `pull ${AtlasConfig.pullRegistry}/${this.recipe?.id}:${AtlasConfig.pullBranch}`.toLowerCase();
             return this.pullType === 'docker' ? `docker ${baseCommand}` : `podman ${baseCommand}`;
         },
     },
