@@ -30,35 +30,35 @@
         </section>
 
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
-            <div class="bg-white dark:bg-gray-800 rounded-lg shadow">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow relative overflow-hidden">
                 <ul class="flex divide-x divide-gray-200 dark:divide-gray-700">
                     <li class="cursor-pointer flex-grow text-center"
                         :class="{ 'bg-gray-200 dark:bg-gray-700': curTab === 'details' }">
                         <a @click="curTab = 'details'"
-                            class="block py-4 rounded-t-lg text-sm font-medium leading-5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                            class="block py-4 text-sm font-medium leading-5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
                             :class="{ 'text-gray-900 dark:text-white': curTab === 'details' }">Details</a>
                     </li>
                     <li class="cursor-pointer flex-grow text-center items-stretch"
                         :class="{ 'bg-gray-200 dark:bg-gray-700': curTab === 'snippet' }">
                         <a @click="curTab = 'snippet'"
-                            class="flex justify-center py-4 rounded-t-lg text-sm font-medium leading-5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                            class="flex justify-center py-4 text-sm font-medium leading-5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
                             :class="{ 'text-gray-900 dark:text-white': curTab === 'snippet' }">Recipe</a>
                     </li>
                     <li class="cursor-pointer flex-grow text-center items-stretch"
                         :class="{ 'bg-gray-200 dark:bg-gray-700': curTab === 'modules' }">
                         <a @click="curTab = 'modules'"
-                            class="flex justify-center py-4 rounded-t-lg text-sm font-medium leading-5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                            class="flex justify-center py-4 text-sm font-medium leading-5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
                             :class="{ 'text-gray-900 dark:text-white': curTab === 'modules' }">Modules</a>
                     </li>
                     <li class="cursor-pointer flex-grow text-center items-stretch"
                         :class="{ 'bg-gray-200 dark:bg-gray-700': curTab === 'runs' }">
                         <a @click="curTab = 'runs'"
-                            class="flex justify-center py-4 rounded-t-lg text-sm font-medium leading-5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                            class="flex justify-center py-4 text-sm font-medium leading-5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
                             :class="{ 'text-gray-900 dark:text-white': curTab === 'runs' }">Runs</a>
                     </li>
                     <li class="cursor-pointer flex-grow text-center items-stretch">
                         <a :href="recipeSourceUrl" target="_blank"
-                            class="flex justify-center gap-2 py-4 rounded-t-lg text-sm font-medium leading-5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
+                            class="flex justify-center gap-2 py-4 text-sm font-medium leading-5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600">
                             <span>Source</span>
                             <i class="material-icons text-sm">open_in_new</i>
                         </a>

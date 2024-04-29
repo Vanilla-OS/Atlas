@@ -2,7 +2,7 @@
     <div class="flex flex-wrap py-4">
         <div class="flex flex-col w-full lg:w-1/3 p-2">
             <div class="w-full p-2">
-                <div class="bg-white rounded shadow flex justify-between items-center p-4">
+                <div class="bg-white rounded-lg shadow flex justify-between items-center p-4">
                     <div class="flex items-center">
                         <i class="material-icons text-gray-700 mr-2">extension</i>
                         <span class="font-semibold">Modules</span>
@@ -11,7 +11,7 @@
                 </div>
             </div>
             <div class="w-full p-2">
-                <div class="bg-white rounded shadow flex justify-between items-center p-4">
+                <div class="bg-white rounded-lg shadow flex justify-between items-center p-4">
                     <div class="flex items-center">
                         <i class="material-icons text-gray-700 mr-2">layers</i>
                         <span class="font-semibold">Stages</span>
@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="w-full p-2">
-                <div class="bg-white rounded shadow flex justify-between items-center p-4">
+                <div class="bg-white rounded-lg shadow flex justify-between items-center p-4">
                     <div class="flex items-center">
                         <i class="material-icons text-gray-700 mr-2">settings</i>
                         <span class="font-semibold">Args</span>
@@ -29,7 +29,7 @@
                 </div>
             </div>
             <div class="w-full p-2">
-                <div class="bg-white rounded shadow flex justify-between items-center p-4">
+                <div class="bg-white rounded-lg shadow flex justify-between items-center p-4">
                     <div class="flex items-center">
                         <i class="material-icons text-gray-700 mr-2">play_arrow</i>
                         <span class="font-semibold">Runs</span>
@@ -39,7 +39,7 @@
             </div>
         </div>
         <div class="w-full lg:w-2/3 p-2">
-            <div class="bg-white rounded shadow">
+            <div class="bg-white rounded-lg shadow">
                 <div class="p-4 flex items-center">
                     <i class="material-icons text-gray-700 mr-2">pie_chart</i>
                     <span class="font-semibold">Modules Usage</span>

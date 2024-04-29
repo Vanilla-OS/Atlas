@@ -11,7 +11,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
       <div v-if="atlasStore.layout === 'list'">
         <div class="overflow-x-auto">
-          <table class="min-w-full bg-white rounded shadow">
+          <table class="min-w-full bg-white rounded-lg shadow">
             <thead class="bg-gray-200">
               <tr>
                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
