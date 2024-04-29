@@ -1,9 +1,31 @@
 <template>
     <div v-if="recipe">
-        <section class="bg-gray-100 dark:bg-gray-800 text-center py-8">
-            <div class="container mx-auto px-4">
-                <p class="text-3xl font-bold text-black dark:text-gray-200">{{ recipe.name }}</p>
-                <p class="text-xl text-gray-600 dark:text-gray-400">{{ recipe.repo }}</p>
+        <section class="bg-gray-100 dark:bg-gray-800 py-6">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
+                <div>
+                    <p class="text-3xl font-bold text-black dark:text-gray-200">{{ recipe.name }}</p>
+                    <p class="text-xl text-gray-600 dark:text-gray-400">{{ recipe.repo }}</p>
+                </div>
+                <div class="">
+                    <div class="flex gap-2 mb-2">
+                        <button class="py-1 px-3 text-sm rounded focus:outline-none"
+                            :class="{ 'bg-gray-200 text-gray-900': pullType === 'podman', 'bg-transparent text-gray-700': pullType !== 'podman' }"
+                            @click="pullType = 'podman'">Podman</button>
+                        <button class="py-1 px-3 text-sm rounded focus:outline-none"
+                            :class="{ 'bg-gray-200 text-gray-900': pullType === 'docker', 'bg-transparent text-gray-700': pullType !== 'docker' }"
+                            @click="pullType = 'docker'">Docker</button>
+                    </div>
+                    <div class="flex gap-2">
+                        <div
+                            class="bg-white dark:bg-gray-700 p-2 rounded text-sm border border-gray-300 shadow focus:outline-none flex-1">
+                            <p class="text-gray-700 dark:text-gray-200">{{ pullCommand }}</p>
+                        </div>
+                        <copy-btn :textToCopy="pullCommand" type="lg" title="Copy pull command" />
+                    </div>
+                    <p class="text-xs text-left text-gray-500 dark:text-gray-400 mt-2">
+                        This image might not be meant to be used directly.
+                    </p>
+                </div>
             </div>
         </section>
 
@@ -72,6 +94,7 @@ import { useRouter } from "vue-router";
 import { useAtlasStore } from "@/core/store";
 import AtlasConfig from "@/config";
 
+import CopyBtn from "@/components/CopyBtn.vue";
 import RecipeDetails from "@/components/RecipeDetails.vue";
 import RecipeSnippet from "@/components/RecipeSnippet.vue";
 import RecipeModules from "@/components/RecipeModules.vue";
@@ -80,6 +103,7 @@ import RecipeRuns from "@/components/RecipeRuns.vue";
 export default defineComponent({
     name: "RecipeView",
     components: {
+        CopyBtn,
         RecipeDetails,
         RecipeSnippet,
         RecipeModules,
@@ -94,6 +118,7 @@ export default defineComponent({
             recipe: null as any,
             curTab: "details",
             moduleDetails: null as any,
+            pullType: 'podman',
         };
     },
     async mounted() {
@@ -132,7 +157,11 @@ export default defineComponent({
             if (!this.recipe) {
                 return "";
             }
-            return `${AtlasConfig.publicRegistry}/${this.recipe.repo}`;
+            return `${AtlasConfig.publicRegistry}/${this.recipe.repo}`.toLowerCase();
+        },
+        pullCommand() {
+            const baseCommand = `pull ${AtlasConfig.pullRegistry}/${this.recipe?.id}`.toLowerCase();
+            return this.pullType === 'docker' ? `docker ${baseCommand}` : `podman ${baseCommand}`;
         },
     },
 });
