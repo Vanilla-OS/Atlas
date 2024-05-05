@@ -18,6 +18,7 @@ class AtlasConfig {
     "vanilla-os/chronos",
     "vanilla-os/chronos-frontend",
     "vanilla-os/website:v2",
+    "vanilla-os/differ",
   ];
 }
 
