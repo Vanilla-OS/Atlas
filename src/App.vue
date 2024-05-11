@@ -7,15 +7,19 @@
         </router-link>
         <div class="navbar-end">
           <div class="buttons flex space-x-2">
-            <button @click="setLayout"
+            <button @click="setLayout" v-if="route.name == 'home'"
               :title="atlasStore.layout == 'list' ? 'Switch to grid view' : 'Switch to list view'"
               class="flex items-center p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
               <i class="material-icons">{{ atlasStore.layout == 'list' ? 'view_list' : 'view_module' }}</i>
             </button>
-            <button @click="updateCache" title="Refresh"
+            <button @click="updateCache" title="Refresh" v-if="route.name == 'home'"
               class="flex items-center p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
               <i class="material-icons">refresh</i>
             </button>
+            <a href="https://vib.vanillaos.org/" target="_blank"
+              class="flex items-center p-2 text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white">
+              <i class="material-icons">help</i>
+            </a>
           </div>
         </div>
       </nav>
