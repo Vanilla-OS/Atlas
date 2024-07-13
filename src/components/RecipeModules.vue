@@ -9,10 +9,10 @@
             </div>
 
             <div v-for="(group, groupIndex) in moduleGroups" :key="groupIndex">
-                <h2 class="text-xl font-bold mb-4" v-if="groupIndex != 'nested'">Stage "{{ groupIndex }}"</h2>
+                <h2 class="text-xl font-bold mb-4 dark:text-white" v-if="groupIndex != 'nested'">Stage "{{ groupIndex }}"</h2>
                 <div class="flex flex-col gap-4">
                     <div v-for="(module, index) in group.filter(module => module.name.toLowerCase().includes(searchQuery.toLowerCase()))"
-                        :key="index" class="bg-white rounded-lg shadow overflow-hidden transition-all">
+                        :key="index" class="bg-white dark:bg-gray-800 rounded-lg shadow overflow-hidden transition-all">
                         <div class="py-2 px-6">
                             <div class="flex items-center justify-between">
                                 <i class="material-icons cursor-pointer" v-if="hasNestedModules(module)"
@@ -21,7 +21,7 @@
                                     {{ isNestedExpanded(module) ? 'keyboard_arrow_down' :
                                         'keyboard_arrow_right' }}
                                 </i>
-                                <h3 class="text-lg font-medium text-gray-900 flex-1">{{ module.name }}</h3>
+                                <h3 class="text-lg font-medium text-gray-900 dark:text-gray-200 flex-1">{{ module.name }}</h3>
                                 <span class="inline-flex items-center mr-2 px-2.5 py-0.5 rounded gap-2"
                                     :class="getModuleTypeColors(module.type)">
                                     <span class="material-icons align-middle text-base">{{
@@ -30,7 +30,7 @@
                                 </span>
                                 <button class="py-2 px-3 rounded mr-2" @click="showModuleDetails(module)"
                                     title="Show module details">
-                                    <i class="material-icons text-md">list</i>
+                                    <i class="material-icons text-md dark:text-gray-100">list</i>
                                 </button>
                                 <copy-btn :textToCopy="getRouteToModule(module)" title="Copy link to module"></copy-btn>
                             </div>

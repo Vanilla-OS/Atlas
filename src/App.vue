@@ -3,7 +3,7 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <nav class="flex justify-between items-center py-4" aria-label="main navigation">
         <router-link to="/" class="flex items-center">
-          <img src="/atlas-logo.svg" alt="Logo" class="w-16">
+          <img src="/atlas-logo.svg" alt="Logo" class="w-16 dark:filter dark:invert">
         </router-link>
         <div class="navbar-end">
           <div class="buttons flex space-x-2">
