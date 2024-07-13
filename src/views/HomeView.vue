@@ -1,5 +1,5 @@
 <template>
-  <div v-if="atlasStore.vibRecipes">
+  <div v-if="atlasStore.vibRecipes" class="dark:bg-gray-900">
 
     <section class="bg-gray-100 dark:bg-gray-800 text-black dark:text-gray-200 text-center py-8">
       <div class="container mx-auto px-4">
@@ -11,49 +11,49 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
       <div v-if="atlasStore.layout === 'list'">
         <div class="overflow-x-auto">
-          <table class="min-w-full bg-white rounded-lg shadow">
-            <thead class="bg-gray-200">
+          <table class="min-w-full bg-white dark:bg-gray-800 rounded-lg shadow">
+            <thead class="bg-gray-200 dark:bg-gray-700">
               <tr>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 dark:text-gray-200 uppercase tracking-wider">
                   Recipe Name
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 dark:text-gray-200 uppercase tracking-wider">
                   Repository
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 dark:text-gray-200 uppercase tracking-wider">
                   Stages
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 dark:text-gray-200 uppercase tracking-wider">
                   Modules
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 dark:text-gray-200 uppercase tracking-wider">
                   Runs
                 </th>
-                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 uppercase tracking-wider">
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-800 dark:text-gray-200 uppercase tracking-wider">
                   Actions
                 </th>
               </tr>
             </thead>
-            <tbody class="bg-white divide-y divide-gray-200">
+            <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-950">
               <tr v-for="(recipe, index) in atlasStore.vibRecipes" :key="index">
-                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 dark:text-gray-200">
                   {{ recipe.name }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   {{ recipe.repo }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   {{ recipe.stages.length }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   {{ getModulesCount(recipe.stages) }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   {{ getRunsCount(recipe.stages) }}
                 </td>
-                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-200">
                   <router-link :to="{ name: 'recipe', params: { id: recipe.id } }"
-                    class="text-indigo-600 hover:text-indigo-900">View</router-link>
+                    class="text-indigo-600 dark:text-indigo-200 hover:text-indigo-900 dark:hover:text-indigo-400">View</router-link>
                 </td>
               </tr>
             </tbody>
@@ -62,26 +62,26 @@
       </div>
       <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <div v-for="(recipe, index) in atlasStore.vibRecipes" :key="index"
-          class="bg-white rounded-lg shadow p-6 flex flex-col justify-between leading-normal">
+          class="bg-white dark:bg-gray-800 rounded-lg shadow p-6 flex flex-col justify-between leading-normal">
           <router-link :to="{ name: 'recipe', params: { id: recipe.id } }" class="no-underline text-black">
             <div>
               <div class="mb-4">
-                <div class="text-black font-bold text-xl mb-2">{{ recipe.name }}</div>
-                <code class=" text-gray-800 text-xs font-medium-full md:w-auto block">{{ recipe.repo }}</code>
+                <div class="text-black dark:text-white font-bold text-xl mb-2">{{ recipe.name }}</div>
+                <code class=" text-gray-800 dark:text-gray-400 text-xs font-medium-full md:w-auto block">{{ recipe.repo }}</code>
               </div>
               <div class="flex items-center">
                 <span
-                  class="inline-flex items-center bg-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded gap-2">
+                  class="inline-flex items-center bg-purple-100 dark:bg-purple-800 dark:text-purple-100 text-purple-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded gap-2">
                   <span class="material-icons align-middle text-base">layers</span>
                   {{ recipe.stages.length }}
                 </span>
                 <span
-                  class="inline-flex items-center bg-green-100 text-green-800 text-xs font-medium mr-2 px-2.5 py-0.5 rounded gap-2">
+                  class="inline-flex items-center bg-green-100 dark:bg-green-800 text-green-800 dark:text-green-100 text-xs font-medium mr-2 px-2.5 py-0.5 rounded gap-2">
                   <span class="material-icons align-middle text-base">extension</span>
                   {{ getModulesCount(recipe.stages) }}
                 </span>
                 <span
-                  class="inline-flex items-center bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded gap-2">
+                  class="inline-flex items-center bg-blue-100 dark:bg-blue-800 text-blue-800 dark:text-blue-100 text-xs font-medium px-2.5 py-0.5 rounded gap-2">
                   <span class="material-icons align-middle text-base">terminal</span>
                   {{ getRunsCount(recipe.stages) }}
                 </span>

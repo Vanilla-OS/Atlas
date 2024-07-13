@@ -1,5 +1,5 @@
 <template>
-    <button @click="copyToClipboard" class="button" :title="title">
+    <button @click="copyToClipboard" class="button dark:text-white" :title="title">
         <span class="icon">
             <i class="material-icons" :class="extIconClasses" v-if="!isCopied">content_copy</i>
             <i class="material-icons" :class="extIconClasses" v-else>check</i>

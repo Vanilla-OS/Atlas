@@ -9,10 +9,10 @@
                 <div class="">
                     <div class="flex gap-2 mb-2">
                         <button class="py-1 px-3 text-sm rounded focus:outline-none"
-                            :class="{ 'bg-gray-200 text-gray-900': pullType === 'podman', 'bg-transparent text-gray-700': pullType !== 'podman' }"
+                            :class="{ 'bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-200': pullType === 'podman', 'bg-transparent text-gray-700 dark:text-gray-400': pullType !== 'podman' }"
                             @click="pullType = 'podman'">Podman</button>
                         <button class="py-1 px-3 text-sm rounded focus:outline-none"
-                            :class="{ 'bg-gray-200 text-gray-900': pullType === 'docker', 'bg-transparent text-gray-700': pullType !== 'docker' }"
+                            :class="{ 'bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-200': pullType === 'docker', 'bg-transparent text-gray-700 dark:text-gray-400': pullType !== 'docker' }"
                             @click="pullType = 'docker'">Docker</button>
                     </div>
                     <div class="flex gap-2">
