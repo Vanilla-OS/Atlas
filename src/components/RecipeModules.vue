@@ -2,7 +2,7 @@
     <div class="py-4">
         <div v-if="!moduleDetails">
             <div class="flex items-center mb-4 gap-2">
-                <span class="material-icons text-gray-500 text-lg">search</span>
+                <span class="material-icons text-gray-500 dark:text-gray-200 text-lg">search</span>
                 <input
                     class="bg-white dark:bg-gray-700 p-2 rounded text-sm border border-gray-300 shadow focus:outline-none flex-1"
                     type="search" v-model="searchQuery" placeholder="Search modules" />
