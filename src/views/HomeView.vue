@@ -104,14 +104,14 @@
 
   <transition name="fade">
     <div v-if="cacheIsOld && !messageHidden"
-      class="fixed bottom-16 right-0 m-8 max-w-sm w-full bg-yellow-300 text-yellow-900 p-4 rounded-lg shadow-lg">
+      class="fixed bottom-16 right-0 m-8 max-w-sm w-full bg-yellow-300 dark:bg-yellow-900 text-yellow-900 dark:text-yellow-50 p-4 rounded-lg shadow-lg">
       <div class="flex justify-between items-center">
         <p class="font-bold">Warning</p>
         <button class="bg-transparent text-2xl" aria-label="close" @click="hideWarning">&#10005;</button>
       </div>
       <p>Your local data is older than <u>12 hours</u>, which means that you may not see the latest recipes. Do you want
         to update it now?</p>
-      <button class="mt-2 py-2 px-4 bg-yellow-500 text-white rounded hover:bg-yellow-600" @click="updateCache">Update
+      <button class="mt-2 py-2 px-4 bg-yellow-500 dark:bg-yellow-700 dark:text-yellow-50 rounded hover:bg-yellow-600" @click="updateCache">Update
         cache</button>
     </div>
   </transition>
