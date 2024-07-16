@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div v-if="hasNestedModules(module) && isNestedExpanded(module)"
-                            class="bg-gray-100 border border-gray-200 p-4 mx-4 mb-4 rounded-lg shadow-md flex-1">
+                            class="bg-gray-100 dark:bg-gray-700 border border-gray-200 dark:border-gray-900 p-4 mx-4 mb-4 rounded-lg shadow-md flex-1">
                             <recipe-modules :recipe="module" :moduleDetails="moduleDetails"
                                 @showModuleDetails="showModuleDetails" @closeModuleDetails="goBack"></recipe-modules>
                         </div>
