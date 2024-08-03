@@ -11,7 +11,7 @@ To configure your registry, you need to edit the `config.ts` file.
 To run the registry in development mode, run the following command:
 
 ```bash
-npm run dev
+pnpm dev
 ```
 
 ## Production
@@ -19,5 +19,5 @@ npm run dev
 To run the registry in production mode, run the following command:
 
 ```bash
-npm run build
+pnpm build
 ```
