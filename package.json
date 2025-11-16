@@ -14,7 +14,7 @@
     "axios": "^1.6.0",
     "chart.js": "^4.4.2",
     "highlight.js": "^11.8.0",
-    "js-yaml": "^4.1.0",
+    "js-yaml": "^4.1.1",
     "pinia": "^2.1.6",
     "pinia-plugin-persistedstate": "^3.2.0",
     "vue": "^3.2.47",
