@@ -10,11 +10,17 @@
   },
   "dependencies": {
     "@babel/types": "^7.22.5",
+    "@fortawesome/fontawesome-svg-core": "^7.3.1",
+    "@fortawesome/free-solid-svg-icons": "^7.3.1",
+    "@fortawesome/vue-fontawesome": "^3.3.3",
     "@highlightjs/vue-plugin": "^2.1.0",
     "axios": "^1.12.0",
     "chart.js": "^4.4.2",
+    "github-markdown-css": "^5.9.0",
     "highlight.js": "^11.8.0",
     "js-yaml": "^4.1.1",
+    "markdown-it": "^15.0.2",
+    "markdown-it-github-alerts": "^1.0.1",
     "pinia": "^2.1.6",
     "pinia-plugin-persistedstate": "^3.2.0",
     "vue": "^3.2.47",
@@ -35,5 +41,9 @@
     "typescript": "^5.0.2",
     "vite": "^5.4.21",
     "vue-tsc": "^1.4.2"
+  },
+  "allowScripts": {
+    "esbuild": true,
+    "vue-demi": true
   }
 }

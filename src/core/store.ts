@@ -6,6 +6,7 @@ export const useAtlasStore = defineStore('atlas', {
         vibRecipes: [] as VibRecipe[],
         lastFetchDate: Date.now(),
         layout: 'grid',
+        activeCategory: 'vanilla-images',
     }),
     persist: {
         storage: window.localStorage,

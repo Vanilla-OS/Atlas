@@ -6,6 +6,9 @@ import router from "./router";
 import highlight from "@/core/highlight";
 import coreLoader from "@/core/loader";
 import "./assets/css/index.css";
+import { library } from '@fortawesome/fontawesome-svg-core';
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
+import { faCircleCheck, faCircleExclamation, faCircleXmark, faDesktop, faMicrochip } from '@fortawesome/free-solid-svg-icons';
 
 const app = createApp(App);
 
@@ -19,3 +22,7 @@ app.use(pinia);
 app.use(coreLoader);
 
 app.mount("#app");
+
+library.add(faCircleCheck, faCircleXmark,faDesktop, faMicrochip, faCircleExclamation);
+
+app.component('font-awesome-icon', FontAwesomeIcon);

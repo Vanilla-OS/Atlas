@@ -3,17 +3,33 @@
         <section class="bg-gray-100 dark:bg-gray-800 py-6">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex justify-between items-center">
                 <div>
-                    <p class="text-3xl font-bold text-black dark:text-gray-200">{{ recipe.name }}</p>
+                    <div class="text-3xl font-bold text-black dark:text-gray-200 flex items-center gap-3">
+                        {{ recipe.name }}
+                        <RecipeStatusBadge :recipe="recipe" size="lg" />
+                    </div>
                     <p class="text-xl text-gray-600 dark:text-gray-400">{{ recipe.repo }}</p>
+
+                    <div v-if="recipe.de || recipe.hardware" class="flex flex-wrap gap-3 mt-3 text-sm">
+                        <span v-if="recipe.de" 
+                              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                            <font-awesome-icon :icon="['fas', 'desktop']" class="text-xs" />
+                            <span class="font-medium">DE:</span> {{ recipe.de }}
+                        </span>
+                        
+                        <span v-if="recipe.hardware" 
+                              class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-300 border border-purple-200 dark:border-purple-800">
+                            <font-awesome-icon :icon="['fas', 'microchip']" class="text-xs" />
+                            <span class="font-medium">Hardware:</span> {{ recipe.hardware }}
+                        </span>
+                    </div>
+
                 </div>
                 <div class="">
                     <div class="flex gap-2 mb-2">
-                        <button class="py-1 px-3 text-sm rounded focus:outline-none"
-                            :class="{ 'bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-200': pullType === 'podman', 'bg-transparent text-gray-700 dark:text-gray-400': pullType !== 'podman' }"
-                            @click="pullType = 'podman'">Podman</button>
-                        <button class="py-1 px-3 text-sm rounded focus:outline-none"
-                            :class="{ 'bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-200': pullType === 'docker', 'bg-transparent text-gray-700 dark:text-gray-400': pullType !== 'docker' }"
-                            @click="pullType = 'docker'">Docker</button>
+                        <button v-for="option in pullOptions" :key="option.id"
+                            class="py-1 px-3 text-sm rounded focus:outline-none"
+                            :class="{ 'bg-gray-200 dark:bg-gray-600 text-gray-900 dark:text-gray-200': pullType === option.id, 'bg-transparent text-gray-700 dark:text-gray-400': pullType !== option.id }"
+                            @click="pullType = option.id">{{ option.label }}</button>
                     </div>
                     <div class="flex gap-2">
                         <div
@@ -32,6 +48,12 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4">
             <div class="bg-white dark:bg-gray-800 rounded-lg shadow relative overflow-hidden">
                 <ul class="flex divide-x divide-gray-200 dark:divide-gray-700">
+                    <li class="cursor-pointer flex-grow text-center"
+                        :class="{ 'bg-gray-200 dark:bg-gray-700': curTab === 'readme' }">
+                        <a @click="curTab = 'readme'"
+                            class="block py-4 text-sm font-medium leading-5 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600"
+                            :class="{ 'text-gray-900 dark:text-white': curTab === 'readme' }">Readme</a>
+                    </li>
                     <li class="cursor-pointer flex-grow text-center"
                         :class="{ 'bg-gray-200 dark:bg-gray-700': curTab === 'details' }">
                         <a @click="curTab = 'details'"
@@ -66,7 +88,9 @@
                 </ul>
             </div>
 
-            <RecipeDetails v-if="curTab === 'details'" :recipe="recipe" />
+            <RecipeReadme v-if="curTab === 'readme'" :recipeSourceUrl="recipeRawUrl" :git_branch="recipeGitBranch" />
+
+            <RecipeDetails v-else-if="curTab === 'details'" :recipe="recipe" />
 
             <RecipeSnippet v-else-if="curTab === 'snippet'" :recipe="recipe" />
 
@@ -95,19 +119,23 @@ import { useAtlasStore } from "@/core/store";
 import AtlasConfig from "@/config";
 
 import CopyBtn from "@/components/CopyBtn.vue";
+import RecipeReadme from "@/components/RecipeReadme.vue";
 import RecipeDetails from "@/components/RecipeDetails.vue";
 import RecipeSnippet from "@/components/RecipeSnippet.vue";
 import RecipeModules from "@/components/RecipeModules.vue";
 import RecipeRuns from "@/components/RecipeRuns.vue";
+import RecipeStatusBadge from "@/components/RecipeStatusBadge.vue";
 
 export default defineComponent({
     name: "RecipeView",
     components: {
         CopyBtn,
+        RecipeReadme,
         RecipeDetails,
         RecipeSnippet,
         RecipeModules,
         RecipeRuns,
+        RecipeStatusBadge,
     },
     setup() {
         const atlasStore = useAtlasStore();
@@ -116,35 +144,21 @@ export default defineComponent({
     data() {
         return {
             recipe: null as any,
-            curTab: "details",
+            curTab: "readme",
             moduleDetails: null as any,
-            pullType: 'podman',
+            pullType: 'abroot',
         };
     },
     async mounted() {
         const router = useRouter();
-        const { id, module } = router.currentRoute.value.params;
+        const { id } = router.currentRoute.value.params;
 
         try {
             // @ts-ignore
             this.recipe = await this.atlasStore.getVibRecipe(id);
+            this.pullType = this.pullOptions[0]?.id ?? '';
         } catch (error) {
             console.error("Error fetching recipe:", error);
-        }
-
-        if (module && this.recipe?.modules) {
-            this.curTab = "modules";
-
-            try {
-                for (const mod of this.recipe.modules) {
-                    if (mod.name === module) {
-                        this.moduleDetails = mod;
-                        break;
-                    }
-                }
-            } catch (error) {
-                console.error("Error fetching module details:", error);
-            }
         }
     },
     methods: {
@@ -153,16 +167,45 @@ export default defineComponent({
         },
     },
     computed: {
+        pullOptions(): Array<{ id: string; label: string }> {
+            if (this.recipe?.category === 'vib-recipes') {
+                return [
+                    { id: 'podman', label: 'Podman' },
+                    { id: 'docker', label: 'Docker' },
+                ];
+            }
+            return [{ id: 'abroot', label: 'ABRoot' }];
+        },
         recipeSourceUrl() {
             if (!this.recipe) {
                 return "";
             }
             return `${AtlasConfig.publicRegistry}/${this.recipe.repo}`.toLowerCase();
         },
-        pullCommand() {
-            const baseCommand = `pull ${AtlasConfig.pullRegistry}/${this.recipe?.id}:${AtlasConfig.pullBranch}`.toLowerCase();
-            return this.pullType === 'docker' ? `docker ${baseCommand}` : `podman ${baseCommand}`;
+        recipeRawUrl() {
+            if (!this.recipe) {
+                return "";
+            }
+            return `${AtlasConfig.registry}/${this.recipe.repo}`.toLowerCase();
         },
-    },
+        recipeGitBranch() {
+            if (!this.recipe) {
+                return "";
+            }
+            return this.recipe.git_branch;
+        },
+        pullCommand() {
+            const baseCommand = `${this.recipe?.image}:${this.recipe?.label}`.toLowerCase();
+            if (this.pullType === 'docker') {
+                return `docker pull ${baseCommand}`;
+            } else if (this.pullType === 'podman') {
+                return `podman pull ${baseCommand}`
+            } else if (this.pullType === 'abroot') {
+                return `abroot rebase ${baseCommand}`
+            }
+
+            return ``;
+        }
+    }
 });
 </script>

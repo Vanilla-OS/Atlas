@@ -32,7 +32,6 @@
                                     title="Show module details">
                                     <i class="material-icons text-md dark:text-gray-100">list</i>
                                 </button>
-                                <copy-btn :textToCopy="getRouteToModule(module)" title="Copy link to module"></copy-btn>
                             </div>
                         </div>
                         <div v-if="hasNestedModules(module) && isNestedExpanded(module)"
@@ -62,7 +61,6 @@
             <div>
                 <h3 class="text-3xl font-bold mt-4">
                     {{ moduleDetails.name }}
-                    <copy-btn :textToCopy="getRouteToModule(moduleDetails)" title="Copy link to module"></copy-btn>
                 </h3>
                 <p class="text-xl mt-1 flex gap-2">Module of type
                     <span class="inline-flex items-center px-2.5 py-0.5 rounded text-sm font-medium"
@@ -146,13 +144,8 @@ import atlasHelpers from "@/core/helpers";
 import type { Module, Stage } from "@/core/models";
 import * as yaml from "js-yaml";
 import { defineComponent } from "vue";
-import CopyBtn from "./CopyBtn.vue";
-import AtlasConfig from "@/config";
 
 export default defineComponent({
-    components: {
-        CopyBtn,
-    },
     props: {
         recipe: {
             type: Object,
@@ -207,9 +200,6 @@ export default defineComponent({
         },
         toYaml(obj: any) {
             return yaml.dump(obj);
-        },
-        getRouteToModule(module: any) {
-            return `${AtlasConfig.publicUrl}/recipes/${this.recipe.id}/modules/${module.name}`;
         },
     },
 });

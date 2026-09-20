@@ -1,10 +1,22 @@
 <template>
   <div class="topbar bg-white dark:bg-gray-900 shadow">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <nav class="flex justify-between items-center py-4" aria-label="main navigation">
+      <nav class="flex flex-wrap items-center justify-between gap-3 py-4" aria-label="main navigation">
         <router-link to="/" class="flex items-center">
           <img src="/atlas-logo.svg" alt="Logo" class="w-16 dark:filter dark:invert">
         </router-link>
+        <div class="order-last w-full flex items-center gap-1.5 overflow-x-auto sm:order-none sm:w-auto sm:flex-1 sm:justify-center"
+          role="tablist" aria-label="image categories">
+          <button v-for="category in categories" :key="category.id" role="tab" :title="category.subtitle"
+            :aria-selected="atlasStore.activeCategory === category.id" @click="setCategory(category.id)"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-medium border whitespace-nowrap cursor-pointer transition-colors duration-200"
+            :class="atlasStore.activeCategory === category.id
+              ? 'bg-indigo-600 text-white border-indigo-600 dark:bg-indigo-500 dark:border-indigo-500'
+              : 'bg-transparent text-gray-600 dark:text-gray-300 border-gray-200 dark:border-gray-700 hover:border-indigo-400 dark:hover:border-indigo-500'">
+            <i class="material-icons text-base leading-none">{{ category.icon }}</i>
+            {{ category.label }}
+          </button>
+        </div>
         <div class="navbar-end">
           <div class="buttons flex space-x-2">
             <button @click="setLayout" v-if="route.name == 'home'"
@@ -56,6 +68,9 @@ export default defineComponent({
     route() {
       return this.$route;
     },
+    categories() {
+      return AtlasConfig.categories;
+    },
   },
   setup() {
     const atlasStore = useAtlasStore();
@@ -65,6 +80,14 @@ export default defineComponent({
     this.title = AtlasConfig.title;
   },
   methods: {
+    setCategory(id: string) {
+      this.atlasStore.$patch((state) => {
+        state.activeCategory = id;
+      });
+      if (this.$route.name !== "home") {
+        this.$router.push({ name: "home" });
+      }
+    },
     setLayout() {
       this.atlasStore.$patch((state) => {
         state.layout = state.layout == "list" ? "grid" : "list";
